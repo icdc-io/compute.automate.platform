@@ -8,5 +8,5 @@ object:
     display_name: 
     priority: 
     enabled: 
-    ancestry: 26000000000128/26000000000131
+    ancestry: 26000000000146/26000000000147
     relative_path: Service/Email
