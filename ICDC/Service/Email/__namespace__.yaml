@@ -1,0 +1,12 @@
+---
+object_type: namespace
+version: 1.0
+object:
+  attributes:
+    name: Email
+    description: ''
+    display_name: 
+    priority: 
+    enabled: 
+    ancestry: 26000000000128/26000000000131
+    relative_path: Service/Email

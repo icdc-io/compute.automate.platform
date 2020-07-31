@@ -1,0 +1,195 @@
+---
+object_type: class
+version: 1.0
+object:
+  attributes:
+    description: 
+    display_name: 
+    name: Email
+    type: 
+    inherits: 
+    visibility: 
+    owner: 
+    relative_path: Service/Email/Email
+  schema:
+  - field:
+      aetype: attribute
+      name: signature
+      display_name: 
+      datatype: string
+      priority: 1
+      owner: 
+      default_value: ICDC team
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: attribute
+      name: src
+      display_name: 
+      datatype: string
+      priority: 2
+      owner: 
+      default_value: data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAL4AAAAnCAIAAAA+f2VBAAAAA3NCSVQICAjb4U/gAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAFBdJREFUeJztXHlUFFe6r6ruqu6moRegm11AARsREHABgWiGELfR4EKMzvhiHGeeE+NT4zxN3iE6mEWTMzE4Z4yOiVEwYxRDZAjIKJFIMKig7IsBREBotm6a3ru6q+q+PypTpw9L081iJjP+/rpd3Pvdr6p+937bLWAAAPQUT+E4kJ9agaf4uYL9BOYwm816vR7HcZKkEARGUZTH4zk5OcEw/ARmf4ppwjRShyAIxeDQN9/dLanpqu3C5azZhDgMMincNBWzXfH4ULfnE+cHz/LHUPQph36OgKfD1wEAVNY0fFljKW4ydlG+JrMZ0vUCmIUQRjYwoShK8aQU38uVeBwbgKwLNT8bG+7k5DTlajzFtGLqqQMA+OLipXfu+ihdYkjjEP4gjyX2RwQzEL4EZmEQZYEN/Zz+2/zBe/pZv8KliwTm9jXOxUf3b8MwbGo1eYppxRRTRzWkTj/19d96F1EwCnUWB4vxubO8At1RNwEXRVl6g7lbaWjRuzZpXJWsQO7ALYG2Xu8WaxCFL4GvHX55oSzIn5aj0+n6+we0RjMFwSgMxEJnqVSKougUqvoUk8RUUkehUPz+4MlbvF/henWo9u9/2Lo8JnSGq0jA4XDYbDYMwyRJWiwWg8H4uF/95bcN2c0SDcffpe8GSuGDfilxcMmpXYtNJjy34JubQ7IePaqHXCgWByU0Igz3xwbWhiO/WBLv4uIyVQo/MTx48CArK4vD4ezcudPd3f2nVmdqMGXUGVKr/yf9ZIFlLdfS/zy78P2De6RSqY3+FEWVfH83PV/Twpon6s6HEbbSc3mEoUCJ+HTyEyhcC1EWmM2FIQCTRpg0QTwpi9DHo6U7XwiPmxfyM7JuOp1u//79TU1NEAQFBgaeOX
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: attribute
+      name: footer
+      display_name: 
+      datatype: string
+      priority: 3
+      owner: 
+      default_value: "<table><tr><td width='570px'>Thank you for choosing ICDC,<br/>ICDC
+        Team.</td><td><img src='${#src}'/></td></tr></table>"
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: attribute
+      name: from
+      display_name: 
+      datatype: string
+      priority: 4
+      owner: 
+      default_value: bot@mail.icdc.io
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: attribute
+      name: miq_ui_url
+      display_name: 
+      datatype: string
+      priority: 5
+      owner: 
+      default_value: https://compute.icdc.io/ui/service
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: attribute
+      name: miq_service_url
+      display_name: 
+      datatype: string
+      priority: 6
+      owner: 
+      default_value: "${#miq_ui_url}/services/"
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: attribute
+      name: miq_help
+      display_name: 
+      datatype: string
+      priority: 7
+      owner: 
+      default_value: https://help.icdc.io
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: attribute
+      name: to
+      display_name: 
+      datatype: string
+      priority: 8
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: method
+      name: method1
+      display_name: 
+      datatype: string
+      priority: 9
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
