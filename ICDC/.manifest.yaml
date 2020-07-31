@@ -1,0 +1,77 @@
+---
+__domain__.yaml:
+  classes: 1
+  instances: 1
+  method_files: 1
+  method_instances: 1
+  created_on: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &1 2020-07-30 06:44:33.771028000 Z
+    zone: &2 !ruby/object:ActiveSupport::TimeZone
+      name: Etc/UTC
+    time: *1
+  updated_on: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &3 2020-07-31 09:55:12.324095000 Z
+    zone: *2
+    time: *3
+  size: 277
+  sha1: 78cURV4v2YEXOmL+TIx6AGhp0O8=
+ICDC/Service/__namespace__.yaml:
+  created_on: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &4 2020-07-30 10:08:15.436491000 Z
+    zone: *2
+    time: *4
+  updated_on: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &5 2020-07-30 10:08:15.436491000 Z
+    zone: *2
+    time: *5
+  size: 206
+  sha1: aoKfdgVXvb/xDokLQWUt9pdh1h0=
+ICDC/Service/Email/__namespace__.yaml:
+  created_on: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &6 2020-07-30 10:10:01.732274000 Z
+    zone: *2
+    time: *6
+  updated_on: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &7 2020-07-30 10:10:01.732274000 Z
+    zone: *2
+    time: *7
+  size: 223
+  sha1: z19r1aeJG8dvTqLI6un4o2/0zOE=
+ICDC/Service/Email/Email.class/__class__.yaml:
+  created_on: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &8 2020-07-30 10:10:27.045842000 Z
+    zone: *2
+    time: *8
+  updated_on: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &9 2020-07-31 09:45:32.951778000 Z
+    zone: *2
+    time: *9
+  size: 4819
+  sha1: xhIRXiGNe00ZhTmSy+oHpMULb6c=
+ICDC/Service/Email/Email.class/Email.yaml:
+  created_on: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &10 2020-07-31 07:32:27.364217000 Z
+    zone: *2
+    time: *10
+  updated_on: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &11 2020-07-31 07:32:27.380225000 Z
+    zone: *2
+    time: *11
+  size: 233
+  sha1: eioAejEqA4Cx2orBvafA6IZTzZ4=
+ICDC/Service/Email/Email.class/__methods__/SharingService.rb:
+  created_on: &14 !ruby/object:ActiveSupport::TimeWithZone
+    utc: &12 2020-07-30 10:11:27.752562000 Z
+    zone: *2
+    time: *12
+  updated_on: &15 !ruby/object:ActiveSupport::TimeWithZone
+    utc: &13 2020-07-31 08:48:36.051308000 Z
+    zone: *2
+    time: *13
+  size: 1156
+  sha1: jtH8Q/aeD6U4N0UpbyW47IXAVPc=
+ICDC/Service/Email/Email.class/__methods__/SharingService.yaml:
+  created_on: *14
+  updated_on: *15
+  size: 248
+  sha1: XTNgbUhSpLjghSsPJ8tc9QVmwKE=
