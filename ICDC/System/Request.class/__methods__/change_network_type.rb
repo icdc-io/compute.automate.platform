@@ -18,6 +18,7 @@ def change_network_type_redhat(vm)
     retry
   end
   connection.system_service.vms_service.vm_service(vm.uid_ems).start
+  $evm.instantiate('/Service/Email/Email/Email?method_name=ChangeNetworkType')
 end
 
 def change_network_type_power(vm)
