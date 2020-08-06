@@ -38,7 +38,7 @@ if service1.all_service_children.present?
     sleep 10
     service2.root_service.retire_now
     sleep 10
-    $evm.instantiate("/Service/Retirement/StateMachines/ServiceProxy/Default")
+    $evm.instantiate("/Service/Retirement/StateMachines/ServiceRetirement/Default")
     exit MIQ_OK
   end
 end
