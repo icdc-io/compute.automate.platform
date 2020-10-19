@@ -1,1 +1,1 @@
-ManageIQ::Automation::Infrastructure::VM::Provisioning::StateMachines::EnablePublicAccess.new.main
+ManageIQ::Automation::Infrastructure::VM::Provisioning::StateMachines::EnablePublicAccess.new($evm, [:ssh, :cockpit]).main
