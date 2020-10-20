@@ -1,3 +1,4 @@
+require '/var/www/miq/vmdb/lib/icdc/network.rb'
 module ManageIQ
   module Automation
     module Infrastructure
@@ -12,13 +13,11 @@ module ManageIQ
               end
 
               def main
-                exit MIQ_OK unless provision.get_option(:enable_public_access)
+                exit MIQ_OK unless provision.get_option(:enable_public_access) == "t"
                 @vm = vm
                 @available_protocols.each do |protocol|
                   response = create_public_access(protocol)
-                  if response.code == "200"
-                    provision.set_option(:'external_#{protocol}_access', {:host => response.body.dig("host"), :port => response.body.dig("port")})
-                  end
+                  provision.set_option("external_#{protocol}_access", {:host => response[:host], :port => response[:port]})
                 end
               end
 
@@ -37,11 +36,8 @@ module ManageIQ
               end
 
               def service
-                vm.service
-              end
-
-              def proxy_server
-                $evm.vmdb(:HaproxyCluster).get_proxy_server(service)
+                id = vm.service.id
+                $evm.vmdb(:Service).find(id)
               end
 
               def generate_payload(protocol)
@@ -66,7 +62,7 @@ module ManageIQ
 
               def create_public_access(protocol)
                 payload = generate_payload(protocol)
-                proxy_server.add_service_routers(service, payload)
+                service.add_haproxy_routes(payload)
               end
 
               def provision
@@ -74,7 +70,7 @@ module ManageIQ
                   raise "ERROR - miq_provision object not passed in" unless provision
                 end
               end
-              
+
               def protocol_port_mapper
                 {
                   :ssh => "22",
