@@ -3,6 +3,9 @@ to_srv = $evm.root['dialog_merge_id']
 bundle_name = $evm.root['dialog_new_name']
 service2 = $evm.vmdb(:service).find_by(:id => to_srv).root_service
 $evm.log(:info, "Start aggregate #{service1.id} and #{service2.id} ")
+
+template_id = $evm.vmdb(:ServiceTemplate).find_by(:name => "Clone Service #{service1.miq_region.description.upcase}").id
+
 if bundle_name.empty?
   bundle_name = service1.name.to_s + " bundle"
 end
@@ -24,7 +27,7 @@ if service1.all_service_children.present?
     new_service.display = true
     new_service.description = "Bundle service #{service1.name} and #{service2.name}"
     # Template id = id Empty Service Template
-    new_service[:service_template_id] = "1000000000141"
+    new_service[:service_template_id] = template_id
     owner = $evm.vmdb(:user).find_by(:id => service1.evm_owner_id)
     new_service.owner = owner if owner
     new_service.group = owner.current_group if owner
@@ -48,7 +51,7 @@ if service1.all_service_children.blank?
     new_service.display = true
     new_service.description = "Bundle service #{service1.name} and #{service2.name}"
     # Template id = id Empty Service Template
-    new_service[:service_template_id] = "1000000000141"
+    new_service[:service_template_id] = template_id
     owner = $evm.vmdb(:user).find_by(:id => service1.evm_owner_id)
     new_service.owner = owner if owner
     new_service.group = owner.current_group if owner
