@@ -1,4 +1,3 @@
-require '/var/www/miq/vmdb/lib/icdc/network.rb'
 module ManageIQ
   module Automation
     module Infrastructure
@@ -18,26 +17,55 @@ module ManageIQ
                 @available_protocols.each do |protocol|
                   response = create_public_access(protocol)
                   provision.set_option("external_#{protocol}_access", {:host => response[:host], :port => response[:port]})
+                  SkyDNS.set_CNAME(response[:host], "lb-default.#{account_id}.#{location_domain}.")
                 end
               end
 
               private
+              
+              def log(msg)
+                @handle.log(:info, "[ICDC] #{msg}")
+              end
 
               def ip
                 (ip_map[@vm.id] || []).collect(&:ip).compact
               end
 
               def ip_map
-                @ip_map ||= service.networks.collect{|n| n.allocations}.flatten.select{|a| a.type == :nic }.group_by(&:vm_id)
+                @ip_map ||= networks.collect{|n| n.allocations}.flatten.select{|a| a.type.to_sym == :nic }.group_by(&:vm_id)
               end
 
               def vm 
                 provision.destination
               end
+              
+              def networks
+                @networks ||= JSON.parse(service.networks_json).map do |n|
+                  network = OpenStruct.new(n)
+                  network.allocations = network.allocations.map{|alloc| OpenStruct.new(alloc)}
+                  network
+                end
+              end
 
               def service
                 id = vm.service.id
                 $evm.vmdb(:Service).find(id)
+              end
+
+              def account
+                @account ||= vm.service.tenant.project? && vm.service.tenant.parent || vm.service.tenant
+              end
+
+              def account_id
+                @account_id ||= account.name.downcase.slice(0..4)
+              end
+
+              def location
+                @location ||= service.region_description.downcase
+              end
+
+              def location_domain
+                @location_domain = "#{location}.icdc.io"
               end
 
               def generate_payload(protocol)
@@ -62,7 +90,10 @@ module ManageIQ
 
               def create_public_access(protocol)
                 payload = generate_payload(protocol)
-                service.add_haproxy_routes(payload)
+                log("public_access payload: #{payload}")
+                result = service.add_haproxy_routes(payload)
+                log("public_access result: #{result}")
+                result
               end
 
               def provision
