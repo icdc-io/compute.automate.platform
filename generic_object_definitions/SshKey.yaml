@@ -1,0 +1,11 @@
+---
+- GenericObjectDefinition:
+    name: SshKey
+    description: SshKey
+    properties:
+      :attributes:
+        name: :string
+        key: :string
+      :associations:
+        user: User
+      :methods: []
