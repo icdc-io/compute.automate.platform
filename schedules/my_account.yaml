@@ -1,0 +1,29 @@
+---
+- MiqSchedule:
+    name: my_account
+    description: Chargeback for My Account
+    sched_action:
+      :method: run_report
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: MiqReport-name
+          value: my_account
+      context_type: 
+    resource_type: MiqReport
+    run_at:
+      :start_time: 2020-01-01 18:00:00.000000000 Z
+      :tz: UTC
+      :interval:
+        :unit: hourly
+        :value: '12'
+    enabled: true
+    userid: system
+    prod_default: system
+    miq_search_id: 
+    adhoc: 
+    file_depot_id: 
+    schedulable_id: 
+    schedulable_type: 
+    resource_id: 
+    filter_resource_name: my_account
