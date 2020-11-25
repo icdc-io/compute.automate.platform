@@ -4,6 +4,8 @@
     description: Chargeback for My Account
     sched_action:
       :method: run_report
+      :options:
+        :miq_group_description: EvmGroup-super_administrator
     filter: !ruby/object:MiqExpression
       exp:
         "=":
