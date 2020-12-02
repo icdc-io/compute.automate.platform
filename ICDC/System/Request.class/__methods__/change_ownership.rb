@@ -13,8 +13,8 @@ $evm.log(:info, "OBEKASOV #{service.evm_owner_id}")
 
 # exit MIQ_OK if $evm.root['user'].id != service.evm_owner_id
 exit MIQ_OK unless defined?(old_owner) && defined?(new_owner) && defined?(service)
-old_account_id = $evm.vmdb(:Tenant).find_by(:id => service.tenant_id).get_account.id
-new_account_id = $evm.vmdb(:Tenant).find_by(:id => new_owner.current_group.tenant_id).get_account.id
+old_account_id = $evm.vmdb(:Tenant).find_by(:id => service.tenant_id).account.id
+new_account_id = $evm.vmdb(:Tenant).find_by(:id => new_owner.current_group.tenant_id).account.id
 exit MIQ_OK unless old_account_id == new_account_id
 
 service.owner = new_owner
