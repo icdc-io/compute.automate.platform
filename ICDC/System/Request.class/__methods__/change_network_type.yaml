@@ -9,5 +9,7 @@ object:
     scope: instance
     language: ruby
     location: inline
+    embedded_methods:
+    - "/Models/etcd/etcd_class"
     relative_path: System/Request/change_network_type
   inputs: []
