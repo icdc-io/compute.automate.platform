@@ -1,3 +1,8 @@
+$evm.instantiate("/TemplateProvisioning/Configuration/Email/Default")
+
+attributes = $evm.object("/TemplateProvisioning/Configuration/Email/Default").attributes
+signature = attributes["signature"].to_s
+
 owner_id = $evm.root['ownerId']
 owner = $evm.vmdb(:User).find_by(:id => owner_id)
 
@@ -25,7 +30,7 @@ subject = "[ICDC.IO] Common access - #{service['name']}"
 body = "<h3>Hello!</h3>"
 body += "User #{owner['name']} has given you access to the service:: <a href='#{link_service}'>#{service['name']}</a>"
 body += "<br><br><a href='#{link_help_share}'>More info</a> on sharing the service.<br><br>"
-body += footer.to_s
+body += signature
 
 $evm.log("info", "Sending email to <#{to}> from <#{from}>")
 $evm.execute('send_email', to, from, subject, body)

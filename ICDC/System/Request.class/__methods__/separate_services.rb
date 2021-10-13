@@ -5,12 +5,11 @@ if $evm.root['dialog_service_id'] != "all"
   service.parent_service = nil
   if p_service.all_service_children.blank?
     $evm.instantiate("/Service/Retirement/StateMachines/ServiceRetirement/Default")
-    p_service.remove_from_vmdb
+    p_service.start_retirement
   end
 else
   p_service.all_service_children.each do |child_service|
     child_service.parent_service = nil
   end
-  p_service.remove_from_vmdb
-  $evm.instantiate("/Service/Retirement/StateMachines/ServiceRetirement/Default")
+  p_service.start_retirement
 end
