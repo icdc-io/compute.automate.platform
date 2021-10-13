@@ -4,12 +4,13 @@ version: 1.0
 object:
   attributes:
     name: change_network_type
-    display_name: 
-    description: 
+    display_name:
+    description:
     scope: instance
     language: ruby
     location: inline
     embedded_methods:
     - "/Models/etcd/etcd_class"
+    - "/Service/Email/Email/ChangeNetworkType"
     relative_path: System/Request/change_network_type
   inputs: []
