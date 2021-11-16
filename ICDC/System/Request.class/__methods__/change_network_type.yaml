@@ -11,6 +11,5 @@ object:
     location: inline
     embedded_methods:
     - "/Models/etcd/etcd_class"
-    - "/Service/Email/Email/ChangeNetworkType"
     relative_path: System/Request/change_network_type
   inputs: []
