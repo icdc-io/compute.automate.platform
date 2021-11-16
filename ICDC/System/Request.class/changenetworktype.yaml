@@ -3,11 +3,13 @@ object_type: instance
 version: 1.0
 object:
   attributes:
-    display_name: 
+    display_name:
     name: ChangeNetworkType
-    inherits: 
-    description: 
+    inherits:
+    description:
     relative_path: System/Request/ChangeNetworkType
   fields:
   - on_entry:
       value: change_network_type
+  - meth1:
+      value: register_dns_within_network_change
