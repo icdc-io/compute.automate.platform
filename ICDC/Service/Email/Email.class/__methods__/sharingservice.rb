@@ -1,4 +1,5 @@
 $evm.instantiate("/TemplateProvisioning/Configuration/Email/Default")
+$evm.instantiate("/ICDC/Service/Email/Email/Email")
 
 attributes = $evm.object("/TemplateProvisioning/Configuration/Email/Default").attributes
 signature = attributes["signature"].to_s
@@ -19,9 +20,10 @@ end
 service_id = $evm.root['serviceId'].to_i
 service = $evm.vmdb(:Service).find_by(:id => service_id)
 
-link_service = "#{$evm.object['miq_service_url']}#{service.id}"
-link_help = $evm.object['miq_help']
-link_help_share = "#{link_help}/ru/Use_of_the_Services/Sharing_Service"
+attributes = $evm.object("/ICDC/Service/Email/Email/Email").attributes
+link_service = "#{attributes['miq_service_url']}#{service.id}"
+link_help = attributes['miq_help']
+link_help_share = "#{link_help}/compute/ru/Use_of_the_Services/Sharing_Service.html"
 
 footer = $evm.object['footer']
 from = $evm.object['from']

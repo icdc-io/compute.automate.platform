@@ -4,8 +4,8 @@ def send_email
   signature = attributes["signature"].to_s
   from = attributes["from"].to_s
   service = $evm.root['Service']
-  service_url = "compute.icdc.io/ui/service/services/#{service.id}"
-  help_link = 'https://help.icdc.io/compute/ru/Use_of_the_Services/Change_Service_Ownership.html'
+  service_url = "compute.zby.icdc.io/ui/service/services/#{service.id}"
+  help_link = 'https://help.icdc.io/compute/ru/Use_of_the_Services/Configuration/Change_Service_Ownership.html'
   owners_info = $evm.get_state_var(:owners_info)
   new_owner_name = owners_info["new_name"]
   old_owner_name = owners_info["old_name"]
