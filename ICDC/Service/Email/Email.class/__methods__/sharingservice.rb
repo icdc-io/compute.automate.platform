@@ -20,8 +20,8 @@ end
 service_id = $evm.root['serviceId'].to_i
 service = $evm.vmdb(:Service).find_by(:id => service_id)
 
-link_service = "#{attributes['miq_service_url']}#{service.id}"
-link_help = attributes['miq_help']
+link_service = "#{attributes["miq_service_url"]}#{service.id}"
+link_help = attributes["miq_help"]
 link_help_share = "#{link_help}/compute/ru/Use_of_the_Services/Sharing_Service.html"
 
 subject = "[ICDC.IO] Common access - #{service['name']}"
