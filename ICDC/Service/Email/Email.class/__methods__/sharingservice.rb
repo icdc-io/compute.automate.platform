@@ -1,12 +1,12 @@
-$evm.instantiate("/TemplateProvisioning/Configuration/Email/Default")
 $evm.instantiate("/ICDC/Service/Email/Email/Email")
 
-attributes = $evm.object("/TemplateProvisioning/Configuration/Email/Default").attributes
-signature = attributes["signature"].to_s
+attributes = $evm.object("/ICDC/Service/Email/Email/Email").attributes
+footer = attributes["footer"].to_s
 
 owner_id = $evm.root['ownerId']
 owner = $evm.vmdb(:User).find_by(:id => owner_id)
 
+from = attributes["from"]
 users_emails = $evm.root['userList']
 users_shared = []
 to = []
@@ -20,19 +20,15 @@ end
 service_id = $evm.root['serviceId'].to_i
 service = $evm.vmdb(:Service).find_by(:id => service_id)
 
-attributes = $evm.object("/ICDC/Service/Email/Email/Email").attributes
 link_service = "#{attributes['miq_service_url']}#{service.id}"
 link_help = attributes['miq_help']
 link_help_share = "#{link_help}/compute/ru/Use_of_the_Services/Sharing_Service.html"
-
-footer = $evm.object['footer']
-from = $evm.object['from']
 
 subject = "[ICDC.IO] Common access - #{service['name']}"
 body = "<h3>Hello!</h3>"
 body += "User #{owner['name']} has given you access to the service:: <a href='#{link_service}'>#{service['name']}</a>"
 body += "<br><br><a href='#{link_help_share}'>More info</a> on sharing the service.<br><br>"
-body += signature
+body += footer
 
 $evm.log("info", "Sending email to <#{to}> from <#{from}>")
 $evm.execute('send_email', to, from, subject, body)

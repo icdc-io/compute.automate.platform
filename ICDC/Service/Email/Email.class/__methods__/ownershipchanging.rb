@@ -1,7 +1,8 @@
-$evm.instantiate("/TemplateProvisioning/Configuration/Email/Default")
+$evm.instantiate("/ICDC/Service/Email/Email/Email")
+
 def send_email
-  attributes = $evm.object("/TemplateProvisioning/Configuration/Email/Default").attributes
-  signature = attributes["signature"].to_s
+  attributes = $evm.object("/ICDC/Service/Email/Email/Email").attributes
+  footer = attributes["footer"].to_s
   from = attributes["from"].to_s
   service = $evm.root['Service']
   service_url = "compute.zby.icdc.io/ui/service/services/#{service.id}"
@@ -56,7 +57,7 @@ def send_email
   body += "</table>"
 
   body += "<br><br><a href='#{help_link}'>More info</a><br><br>"
-  body += signature
+  body += footer
   $evm.log("info", "Sending email to <#{to}> from <#{from}> subject: <#{subject}>")
   $evm.execute('send_email', to, from, subject, body)
 end
