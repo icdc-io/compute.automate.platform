@@ -80,7 +80,7 @@ object:
       datatype: string
       priority: 4
       owner: 
-      default_value: bot@mail.icdc.io
+      default_value: '"ICDC Mail Bot" <bot@mail.icdc.io> '
       substitute: true
       message: create
       visibility: 
@@ -100,7 +100,7 @@ object:
       datatype: string
       priority: 5
       owner: 
-      default_value: https://compute.icdc.io/ui/service
+      default_value: https://compute.zby.icdc.io/ui/service
       substitute: true
       message: create
       visibility: 
