@@ -5,7 +5,9 @@ def change_network_type_redhat(vm)
   connection = vm.ext_management_system.connect
   new_vlan = $evm.root['dialog_network_profile']
   nic_id = connection.system_service.vms_service.vm_service(vm.uid_ems).nics_service.list.first.id
+  nic_profile_id = connection.system_service.vms_service.vm_service(vm.uid_ems).nics_service.list.first.vnic_profile.id
   new_nic_id = connection.system_service.vnic_profiles_service.list.select { |x| x.name == new_vlan }.first.id
+  return if nic_profile_id == new_nic_id
   exit MIQ_OK if nic_id == new_nic_id
   connection.system_service.vms_service.vm_service(vm.uid_ems).shutdown
   sleep 25

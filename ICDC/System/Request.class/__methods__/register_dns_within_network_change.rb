@@ -5,42 +5,42 @@ require 'coredns'
 
 def update_dns_record(vm)
   init_environment(vm)
+  return if @hostname == "n/a" || !@hostname
   remove_dns_record
-  update_dns_record
-  send_email
+  create_dns_record
+  send_email unless $evm.root['ae_result'] == 'retry'
 end
 
 def init_environment(vm)
   @ip_before_change = vm.ipaddresses.first
   @vm = vm
-  @hostname = (@vm.hostnames.first || (ip_map[@vm.id] || []).collect(&:hostname).compact.first).split('.').first
+  @hostname = (@vm.hostnames.first || (ip_map[@vm.id] || []).collect(&:hostname).compact.first).downcase
   @location = @vm.miq_provision.region_description.downcase
   @account = account
   ip
 end  
   
 def remove_dns_record
-  zone = "#{@account.name}.cmp.#{@location}.icdc.io"
-  domain = @hostname + '.' + zone
-  name_to_delete = CoreDns::Etcd.new("etcd.dns.#{@location}.icdc.io").domain(domain).list.select{|x| x["host"] == @ip_before_change}[0]["name"]
-  CoreDns::Etcd.new("etcd.dns.#{@location}.icdc.io").domain(domain).delete({"name" => name_to_delete})
+  name_to_delete = CoreDns::Etcd.new("etcd.dns.#{@location}.icdc.io").domain(@hostname).list.select{|x| x["host"] == @ip_before_change}[0]["name"]
+  CoreDns::Etcd.new("etcd.dns.#{@location}.icdc.io").domain(@hostname).delete({"name" => name_to_delete})
 rescue => e
   $evm.log(:warn, "Can't remove DNS record cause #{e.message}")
 end
 
-def update_dns_record
-  zone = "#{@account.name}.cmp.#{@location}.icdc.io"
-  if @hostname == "@" || @hostname == "" || !@hostname
+def create_dns_record
+  if @hostname.split('.').first == "@" || @hostname.split('.').first == ""
     domain = "apex.dns.#{@location}"
   elsif @hostname
-    domain = "#{@hostname}.#{zone}"
+    domain = @hostname
   end
-  return unless check_domain_length(domain, @hostname)
-  $evm.log(:info, "UN ip = #{@ip_a}, domain=#{domain}, location=#{@location}, owner=#{@vm.evm_owner.userid}, name = #{@hostname}")
+  return unless check_domain_length(domain, @hostname.split('.').first) && @ip_a &&
+                CoreDns::Etcd.new("etcd.dns.#{@location}.icdc.io").domain(domain).list.select{|x| x["host"] == @ip_a}.empty?
   CoreDns::Etcd.new("etcd.dns.#{@location}.icdc.io").domain(domain).add({:host => @ip_a, :ttl => 600, :group => domain,
-                                                                                       :metadata => {:account => @account.name, :owner => @vm.evm_owner.userid}})
+                                                                                       :metadata => {:account => @account.name.downcase, :owner => @vm.evm_owner.userid}})
 rescue => e
-  $evm.log(:warn, "Can't update DNS record cause #{e.message}")
+  $evm.log(:warn, "Can't create DNS record cause #{e.message}")
+  $evm.root['ae_result'] = 'retry'
+  $evm.root['ae_retry_interval'] = 1.minute
 end
     
 def account
@@ -60,8 +60,6 @@ def ip
   nics = @vm.hardware.nics
   @ip_a = nil
   if network_manager && nics.reject{|nic| nic.lan&.name}.present?
-    $evm.root['ae_result'] = 'retry'
-    $evm.root['ae_retry_interval'] = 1.minute
     network_manager.refresh
   else
     nics.each do |nic|
@@ -69,17 +67,21 @@ def ip
       next unless cloud_network
       port = cloud_network.network_ports.detect{|np| np.device&.id == nic.id}
       @ip_a = port.ipaddresses.first if port&.ipaddresses
+      break if @ip_a && @ip_a != '' && (nic.lan.name == $evm.root['dialog_network_profile'])
       if @ip_a == @ip_before_change
-        $evm.root['ae_result'] = 'retry'
-        $evm.root['ae_retry_interval'] = 1.minute
         network_manager.refresh
-      else      
-        break if @ip_a 
+        @ip_a = nil
       end
     end
   end
-  $evm.log(:info,"UN ip = #{@ip_a}")
-  @ip_a
+  unless @ip_a && @ip_a != '' && @hostname && @hostname != 'n/a'
+    $evm.root['ae_result'] = 'retry'
+    $evm.root['ae_retry_interval'] = 1.minute
+    @ip_a = nil
+    network_manager.refresh
+  else
+    @ip_a
+  end
 end
 
 def ip_map
