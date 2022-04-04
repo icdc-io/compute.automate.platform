@@ -9,5 +9,7 @@ object:
     description: Email
     relative_path: Service/Email/Email/Email
   fields:
+  - miq_ui_url:
+      value: https://compute.zby.icdc.io/ui/service
   - method1:
       value: "${#method_name}"
