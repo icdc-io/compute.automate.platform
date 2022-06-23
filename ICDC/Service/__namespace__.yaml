@@ -5,8 +5,8 @@ object:
   attributes:
     name: Service
     description: ''
-    display_name: 
-    priority: 
-    enabled: 
-    ancestry: '26000000000146'
+    display_name:
+    priority:
+    enabled:
+    ancestry: '26000000000290'
     relative_path: Service

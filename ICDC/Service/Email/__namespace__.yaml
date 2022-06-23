@@ -5,8 +5,8 @@ object:
   attributes:
     name: Email
     description: ''
-    display_name: 
-    priority: 
-    enabled: 
-    ancestry: 26000000000146/26000000000147
+    display_name:
+    priority:
+    enabled:
+    ancestry: 26000000000290/26000000000532
     relative_path: Service/Email
