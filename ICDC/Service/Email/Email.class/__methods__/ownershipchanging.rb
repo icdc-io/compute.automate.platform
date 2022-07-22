@@ -5,7 +5,7 @@ def send_email
   footer = attributes["footer"].to_s
   from = attributes["from"].to_s
   service = $evm.root['Service']
-  service_url = "compute.zby.icdc.io/ui/service/services/#{service.id}"
+  service_url = "compute.#{location}.icdc.io/ui/service/services/#{service.id}"
   help_link = 'https://help.icdc.io/compute/ru/Use_of_the_Services/Configuration/Change_Service_Ownership.html'
   owners_info = $evm.get_state_var(:owners_info)
   new_owner_name = owners_info["new_name"]
@@ -49,7 +49,7 @@ def send_email
             "</tr>"\
             "<tr>"\
                 "<td>Other access types</td>"\
-                "<td><a href='https://help.icdc.io/compute/ru/FAQ/Server_Connection.html'>read more</a></td>"\
+                "<td><a href='https://help.icdc.io/compute/ru/Use_of_the_Services/VM/Service_Access.html'>read more</a></td>"\
                 "<td></td>"\
                 "<td></td>"\
             "</tr>"
@@ -60,4 +60,8 @@ def send_email
   body += footer
   $evm.log("info", "Sending email to <#{to}> from <#{from}> subject: <#{subject}>")
   $evm.execute('send_email', to, from, subject, body)
+end
+
+def location
+  service.region_description.downcase
 end
