@@ -63,5 +63,5 @@ def send_email
 end
 
 def location
-  service.region_description.downcase
+  $evm.root['Service'].region_description.downcase
 end
