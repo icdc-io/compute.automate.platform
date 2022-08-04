@@ -1,0 +1,64 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: EmailICDC
+    inherits: 
+    description: Email
+    relative_path: Service/Email/Email/EmailICDC
+  fields:
+  - src:
+      value: data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKcAAAAoCAYAAACb8OrhAAAACXBIWXMAAAsSAAALEgHS3X78AAAJ
+        5ElEQVR4nO1d/4sbxxV/ow0USqlkCIEQSFQCxRDCqZRAceOc7CR14/oqXWK7TSmV9BdY+QtO+Qty
+        /QtOKqVp7XOtIxfT88VnqZea/maJkB+L7wLFYAI5hVIoFKa84a1uNftmdvaLHB3dDyxRbndm5828
+        +cx7b96shZQScuRYRDyVtk2/egpKAFCh/z34w3/hIB/pHFkgEXOSQjYBoA0AL2i3JwDQBYD1XFFz
+        pEFs5Xz3W1BHxWOUksP7+OyH/4GjfJRyxIWzcv7y22rpRqVcjvmOCZVb/+O/cyXN4Y5I5fzFd9QS
+        jsrVYG6PAaBPFypelS7u2amS/ulfuZLmiIZVOa9+V9mUHQAoardQ0drXv1a2JVeuTIpYY24rJb3+
+        tao3Rw4jWOW8ckqxX9dgVyo78sZXdva7ckop6MBimx6igt/4SrFujhwhzCjnlafVEt41MN6WUqYv
+        oz3wK08r5e4zjMuhd+NL5flHQghRpihBEAMp5cCxPJatU+hLnzSHNJn6UkrrhBFCuLI+9tVISjly
+        fD4SJINvPiWWwYYM+rlC5bGNS0wbR745KKU0ktxUOS8/oxRzYKisufkYnBp2+RnVqA3m1pD+yzlU
+        v918rEwIK4QQKOw97Zn3pZRWZSFlajtOFiCZO1JK1mwRQsSNv01oMNaTKqoQwmRimWCVIeJdSfu5
+        Sm10dZon1CdsvQX/h/SgLz1Ykp76jddEevDe5mMouyrmO89CW3qwEagDr5704NTmY6jihb+lBy2q
+        33/m2jvPqlmWKZABhBCoDGsxBhWIkTaEEH0hRCmDNhXJSXwQt86ADB98wzJYIYRYJ4WOE81BedZQ
+        PmLbGSjlfPs5aMoCLMsCAF1jWYDyzUfKqXHC289BVxbgg0AdeL138xE0bz46tk/x981H6tmqLMAk
+        8Gwkc8bsrAotH/pKEAdo3gwyHlys84AbjBMkwxRYL02eaymqWaI2zvSJ2r6U3ox9gctB9dYX7uGe
+        1eehC14ofNS69QXvzSP+/E8YrT6vlH+N/sTZuYlANtPAwjSHgfAXoky2KPf8EtUVqUwxUKTBqJqW
+        eVKmuDJwdui8ZPDRtUwe35zx/ZSSwQ4Frk985QxScaf/0F0x698LKSY2qNp/CJG2lfSUYL5yYl1Y
+        zsmEiEDXMKgYl22bDHtyNtaZslHOxVBKGTJLyAark3Og1+kPRtngFJgcSuUDzEGG2CBb3hQubFts
+        dpNtWqSxU5OoUHtRLa/BpdhZOWovquW5oZUfyYLbnnr/IRxoZVODBoeze3o4aWweJ3VmmZQYqJNX
+        oxwBS33o4bapzi3mEX8wZhAhQyWBDK2kMphAq9MacxvfW7Y5YtQvVZJHx5IfDSlozgts/cNNsX7+
+        fehKDxp6eWRhYkQn6OUzADcIyGxNW9gi0HH+TtcWKXNqxsE6pZR1w2DUiEmC4GQYp5AhtsfuAK6N
+        h/Q+p5UX5TH0ifI/CnGZa+U0lFZOQ59hzOBVWzntpqBZMicZ1FyWlFMcddomUqYs45NwPBhD5ta0
+        fQYZgMyDOO+aiwwR7XGaPBrapNRBFHH1KACyVfCyYOUlKIEHA/CgppVrgQenwINx4G+NlZccFDTG
+        +x3AdVhXSrlIqXtcVKJu+O2jt0gyENPrNu3QNUgfBCkzx8JVZ+a89DKU0B6VBVjSyrQ++hy6H30O
+        RxQeGgfuNS69bA9HZWxzcrHShdoeJSYba38ukg0HBo96HstyGmTdz1zZSsjm5PCzCpSkBwMtSI9X
+        a/uz447b/gyOpKcC7eNggN3WqjnYnLP1J5jNTwBcm3zlDMUjF1QGHYnNB2JPfcIuRSrnxR8aFXP8
+        8Sg8oz8eKQXtuCrcvJVzQXHSUwY55kwrU6h85LIuC8r50ZdyvJbeeiWsnG+9AhVZUCEm/7mJrUVZ
+        h5JyPBFwLJn5DpSVOX/6IxUuWg6ypbYn3sBnAs9XiGWLgWfsNuecmTNgyy0SYjGPy1bnEwbX1rT9
+        rMd1J0bmvHAmFGAfk8Oj74k38NkLZxRjosNUDNzr/eXv9qTijJmTs81ihWDmDZosoQB7IOTDyZB5
+        UkxKcMyZuI1CCG6MRixz/uRsKMCOjFnduQ9HO/dhRE7PDINKDx5ojNnbuR8dX8yYOblOyzShJANw
+        7QnuHnHKuWgycG1spFilOPn6IeZ8cxnWNcZElqzf2T+m8jv7aotSZ9Dg1buz7xb4zpI5aTdHt3Ff
+        iJEcPIUQAve9u1lm89C2JBe9mJpG5JnrQemkMvSzlgGOvWtuOzZJ7mjbsFXbDwfhMfRz/HsCHlR3
+        h+Etzd0hjACzmcLlh7tDN8V887wK6mcZhAdKetCxRorhBBxQ6rAGl8qVBDQIXBL2mNki5QY5iQy1
+        LGXQwPXzMr3XtY1NylPVoTYdCrt7yk40bUNWd/fM8avdPeXJt7Qyy2+84cyadT1pxFUwC9YZ5gFK
+        vF23sQgl9g6006N+rmEi2xUHgOrkBgEMW6tzlwGVFSdMUrmI4Tn2bNCqY1ziKQe0Y5isE3+Z91Pm
+        tpjUp+HdnWhl+eQT6L5+Qf0MvmgD/3Z3x0zzr19QrBlcqsZ3d9LH/3DJoQ5/wNzGJRWVpW/I57Tl
+        lNoC4RVSiCBKDknCLW7vO4UMpmPZMzIQY03HSwjRo33/uGiSna/nAuCq81AIsWXI5+RSCH1M9+fV
+        GaLzF4E7MzLZu+0euzp/kT07hBkn7b3bs0p3/iJ7Xqm1d9tus8Q526IPQApMKNNmFKg7i6+ftaKy
+        heYlgxDiiFGOHwTux+nnSkRSdBzM9Mn0gNu5S0ox9FmHmt+8t+3GaOcusQo6ocb7g1tiZs7w3nZ0
+        KCLuwStiH1PisQvGNJNHWr1plNOaLPwkZDC0/5zfpgT9XCaGTHqchE1ODh5ww8NpQy20U5MeHFRr
+        0KnWoln03rYKQa1qYaYi1bNG1zUt5IRhqrnEIsnRqBhsIxsmdD7feIwiAQ6JGcpx9spTyAAWGTh7
+        NnHWEzovUsoKvc+6I8hgSAnU4aRr/aMKy6vKDuQynNVR0+Gt6HDB8qqyf7oOJ/EUMw9vuTEzLSG6
+        l9h1SaYNnKWuWz70MKZ2d63nqcP2pQkjGvRBFkpODNV2lKFvSrOjvuhTHSHWStnP/srYtDCpf77e
+        elSa/eLHa5etn5NR53D+umk/zvHaZes3ltTSFlXHvEAdOBNaOSGZP1OcFBmYLP8D19xU67eSzl4F
+        2yF5pOPm/vXwcnD2qvEziThLO/vX3Y8c5/j/hdMnEF99V1F0x7CU9IiiD2gm1y2Hs9qffph/YS6H
+        G2J9PPbVX0Pcz7oAMWzn099/M0t4jpOL2F82/vFvlC3ZNjhNQShD+2+/W7gjBjlOCBL/axpnWuB7
+        jvoXHIbkCXbvb+RLeI7kyP+plxyLCQD4H6QRHnUpIW3pAAAAAElFTkSuQmCC
+  - from:
+      value: '"ICDC Platform" <noreply@zeu.icdc.io>'
+  - miq_ui_url:
+      value: https://compute.zby.icdc.io/ui/service
+  - method1:
+      value: "${#method_name}"

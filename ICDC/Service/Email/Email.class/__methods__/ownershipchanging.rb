@@ -1,18 +1,18 @@
-$evm.instantiate("/ICDC/Service/Email/Email/Email")
+$evm.instantiate("/ICDC/Service/Email/Email/Email#{ENV['CPV_NAME']}")
 
 def send_email
-  attributes = $evm.object("/ICDC/Service/Email/Email/Email").attributes
+  attributes = $evm.object("/ICDC/Service/Email/Email/Email#{ENV['CPV_NAME']}").attributes
   footer = attributes["footer"].to_s
   from = attributes["from"].to_s
   service = $evm.root['Service']
-  service_url = "compute.#{location}.icdc.io/ui/service/services/#{service.id}"
-  help_link = 'https://help.icdc.io/compute/ru/Use_of_the_Services/Configuration/Change_Service_Ownership.html'
+  service_url = "compute.#{location}.#{ENV['CPV_NAME'].downcase}.io/ui/service/services/#{service.id}"
+  help_link = "https://help.#{ENV['CPV_NAME'].downcase}.io/compute/ru/Use_of_the_Services/Configuration/Change_Service_Ownership.html"
   owners_info = $evm.get_state_var(:owners_info)
   new_owner_name = owners_info["new_name"]
   old_owner_name = owners_info["old_name"]
   old_owner_email = owners_info["old_email"]
   to = owners_info["new_email"]
-  subject = "[ICDC.IO] Change ownership of service- #{service.name}"
+  subject = "[#{ENV['CPV_NAME']}.IO] Change ownership of service- #{service.name}"
   body = "<h3>Hello, #{new_owner_name}!</h3>"
   body += "User #{old_owner_name}(#{old_owner_email}) transferred the services with the following configuration:" \
       "<table  border='1'>"\
@@ -49,7 +49,7 @@ def send_email
             "</tr>"\
             "<tr>"\
                 "<td>Other access types</td>"\
-                "<td><a href='https://help.icdc.io/compute/ru/Use_of_the_Services/VM/Service_Access.html'>read more</a></td>"\
+                "<td><a href='https://help.#{ENV['CPV_NAME'].downcase}.io/compute/ru/Use_of_the_Services/VM/Service_Access.html'>read more</a></td>"\
                 "<td></td>"\
                 "<td></td>"\
             "</tr>"
