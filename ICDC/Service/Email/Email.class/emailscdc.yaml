@@ -1,0 +1,58 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: EmailSCDC
+    inherits: 
+    description: Email
+    relative_path: Service/Email/Email/EmailSCDC
+  fields:
+  - signature:
+      value: SCDC team
+  - src:
+      value: data:image/png;base64,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
+        gg==
+  - footer:
+      value: "<table><tr><td width='570px'>Thank you for choosing SCDC,<br/>SCDC Team.</td><td><img
+        src='${#src}'/></td></tr></table>"
+  - from:
+      value: '"SCDC Platform" <noreply@zby.scdc.io>'
+  - miq_ui_url:
+      value: https://compute.zby.icdc.io/ui/service
+  - miq_help:
+      value: https://help.scdc.io
+  - method1:
+      value: "${#method_name}"

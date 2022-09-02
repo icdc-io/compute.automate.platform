@@ -1,6 +1,6 @@
-$evm.instantiate("/ICDC/Service/Email/Email/Email")
+$evm.instantiate("/ICDC/Service/Email/Email/Email#{ENV['CPV_NAME']}")
 
-attributes = $evm.object("/ICDC/Service/Email/Email/Email").attributes
+attributes = $evm.object("/ICDC/Service/Email/Email/Email#{ENV['CPV_NAME']}").attributes
 footer = attributes["footer"].to_s
 
 owner_id = $evm.root['ownerId']
@@ -20,11 +20,11 @@ end
 service_id = $evm.root['serviceId'].to_i
 service = $evm.vmdb(:Service).find_by(:id => service_id)
 
-link_service = "https://compute.#{service.region_description.downcase}.icdc.io/ui/service/services/#{service.id}"
+link_service = "https://compute.#{service.region_description.downcase}.#{ENV['CPV_NAME'].downcase}.io/ui/service/services/#{service.id}"
 link_help = attributes["miq_help"]
 link_help_share = "#{link_help}/compute/ru/Use_of_the_Services/Sharing_Service.html"
 
-subject = "[ICDC.IO] Common access - #{service['name']}"
+subject = "[#{ENV['CPV_NAME']}.IO] Common access - #{service['name']}"
 body = "<h3>Hello!</h3>"
 body += "User #{owner['name']} has given you access to the service:: <a href='#{link_service}'>#{service['name']}</a>"
 body += "<br><br><a href='#{link_help_share}'>More info</a> on sharing the service.<br><br>"
