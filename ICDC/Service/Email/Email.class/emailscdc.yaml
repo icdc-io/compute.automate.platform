@@ -49,7 +49,7 @@ object:
       value: "<table><tr><td width='570px'>Thank you for choosing SCDC,<br/>SCDC Team.</td><td><img
         src='${#src}'/></td></tr></table>"
   - from:
-      value: '"SCDC Platform" <noreply@zby.scdc.io>'
+      value: '"SCDC Platform" <noreply@mail.scdc.io>'
   - miq_ui_url:
       value: https://compute.zby.icdc.io/ui/service
   - miq_help:
