@@ -1,0 +1,15 @@
+---
+object_type: method
+version: 1.0
+object:
+  attributes:
+    name: register_dns_within_network_change
+    display_name: 
+    description: 
+    scope: instance
+    language: ruby
+    location: inline
+    embedded_methods:
+    - "/Service/Email/Email/ChangeNetworkType"
+    relative_path: System/Request/register_dns_within_network_change
+  inputs: []

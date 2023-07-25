@@ -1,0 +1,15 @@
+---
+object_type: domain
+version: 1.0
+object:
+  attributes:
+    name: Platform
+    description: Cloud Platform-wide configuration and generic services
+    display_name: 
+    priority: 7
+    enabled: true
+    tenant_id: 26000000000001
+    source: user
+    top_level_namespace: 
+    ancestry: 
+    relative_path: 
