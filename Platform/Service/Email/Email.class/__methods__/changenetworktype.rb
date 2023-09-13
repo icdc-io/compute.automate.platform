@@ -17,7 +17,7 @@ def send_email
   subject = "[#{ENV['CPV_NAME']}.IO] Change network type - #{service['name']}"
   body = "<h3>Hello, #{owner.name}!</h3>"
   body += "Your network type was changed for service - <a href='#{link_service}'>#{service.name}</a>"
-  body += "<br><br><a href='#{link_help_share}'>More info</a>on changing the network type.<br><br>"
+  body += "<br><br><a href='#{link_help_share}'>More info</a> on changing the network type.<br><br>"
   body += footer
 
   $evm.log(:info, "Sending email to <#{to}> from <#{from}>")
