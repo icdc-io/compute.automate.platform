@@ -13,7 +13,7 @@ end
 
 def init_environment(vm)
   @ip_before_change = vm.ipaddresses.first
-  @vm = vm
+  @vm = $evm.root['vm'] = vm
   @hostname = (@vm.hostnames.first || (ip_map[@vm.id] || []).collect(&:hostname).compact.first).downcase
   @location = @vm.miq_provision.region_description.downcase
   @account = account
@@ -97,6 +97,13 @@ def networks
 end
 
 @service = $evm.root['service']
-@service.vms.each do |vm|
+vm_id = $evm.root['dialog_vm_id']
+vms = if vm_id == 'all'
+        $evm.root['service'].vms
+      else
+        $evm.vmdb(:Vm).where(:id => vm_id)
+      end
+
+vms.each do |vm|
   update_dns_record(vm)
 end
