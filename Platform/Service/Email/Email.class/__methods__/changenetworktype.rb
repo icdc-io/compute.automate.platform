@@ -5,6 +5,7 @@ $evm.instantiate("/Configuration/Email/ServiceActions")
 
 def send_email
   attributes = $evm.object("/Configuration/Email/ServiceActions").attributes
+  network_name = $evm.root['new_network_name']
   service = $evm.root['service']
   vm = $evm.root['vm']
 
@@ -18,9 +19,10 @@ def send_email
   owner = service.evm_owner
   to = owner.email
   from = attributes["from"].to_s
-  subject = "[#{ENV['CPV_NAME']}.IO] Change network type - #{service.name} - #{vm.name}"
+  subject = "[#{ENV['CPV_NAME']}.IO] Change network type for VM #{vm.name} in service #{service.name}"
   body = "<h3>Hello, #{owner.name}!</h3>"
-  body += "Your network type was changed for vm - <a href='#{link_vm}'>#{vm.name}</a> in service - <a href='#{link_service}'>#{service.name}</a>"
+  body += "Your network type was changed for VM - <a href='#{link_vm}'>#{vm.name}</a> in service - <a href='#{link_service}'>#{service.name}</a>"
+  body += "<br>New network is #{network_name}"
   body += "<br><br><a href='#{link_help_share}'>More info</a> on changing the network type.<br><br>"
   body += attributes['footer']
 
