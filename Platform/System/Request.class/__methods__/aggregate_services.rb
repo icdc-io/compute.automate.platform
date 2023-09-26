@@ -12,7 +12,7 @@ module Platform
           def main
             @handle.log(:info, "Start aggregate #{@service1.name} (#{@service1.id}) and #{@service2.name} (#{@service2.id})")
             aggregate_services
-            @handle.log("info", "End aggregare services")
+            @handle.log(:info, 'End aggregare services')
           end
 
           def bundle_name
@@ -26,39 +26,35 @@ module Platform
           def aggregate_services
             if @service1.all_service_children.present? && @service2.all_service_children.blank?
               @service2.parent_service = @service1
-              assign_generic_objects(@service2, @service1)
             elsif @service1.all_service_children.blank? && @service2.all_service_children.present?
               @service1.parent_service = @service2
-              assign_generic_objects(@service1, @service2)
             elsif @service1.all_service_children.present? && @service2.all_service_children.present?
-              new_service = create_aggregated_service
-
-              @service1.all_service_children.each do |child_service1|
-                child_service1.parent_service = new_service
-                assign_generic_objects(child_service1, new_service)
-              end
-
-              @service2.all_service_children.each do |child_service2|
-                child_service2.parent_service = new_service
-                assign_generic_objects(child_service2, new_service)
-              end
-
-              @service1.root_service.retire_now
-              sleep 10
-
-              @service2.root_service.retire_now
-              sleep 10
-
-              @handle.instantiate('/Service/Retirement/StateMachines/ServiceRetirement/Default')
+              aggregate_services_with_all_service_children
             elsif @service1.all_service_children.blank? && @service2.all_service_children.blank?
-              new_service = create_aggregated_service
-
-              @service1.parent_service = new_service
-              assign_generic_objects(@service1, new_service)
-
-              @service2.parent_service = new_service
-              assign_generic_objects(@service2, new_service)
+              aggregate_services_without_all_service_children
             end
+          end
+
+          def aggregate_services_with_all_service_children
+            new_service = create_aggregated_service
+
+            @service1.all_service_children.each { |child_service1| child_service1.parent_service = new_service }
+            @service2.all_service_children.each { |child_service2| child_service2.parent_service = new_service }
+
+            @service1.root_service.retire_now
+            sleep 10
+
+            @service2.root_service.retire_now
+            sleep 10
+
+            @handle.instantiate('/Service/Retirement/StateMachines/ServiceRetirement/Default')
+          end
+
+          def aggregate_services_without_all_service_children
+            new_service = create_aggregated_service
+
+            @service1.parent_service = new_service
+            @service2.parent_service = new_service
           end
 
           def create_aggregated_service
@@ -77,11 +73,6 @@ module Platform
             end
 
             new_service
-          end
-
-          def assign_generic_objects(from_service, to_service)
-            generic_objects = from_service.generic_objects
-            generic_objects.each { |generic_object| generic_object.add_to_service(to_service) }
           end
         end
       end
