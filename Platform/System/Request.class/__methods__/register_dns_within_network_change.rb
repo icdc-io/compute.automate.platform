@@ -22,7 +22,7 @@ def init_environment(vm)
 end
 
 def remove_dns_record
-  core_dns_domain = CoreDns::Etcd.new("etcd.dns.#{@location}.icdc.io").domain(@hostname)
+  core_dns_domain = CoreDns::Etcd.new("etcd.dns.#{@location}.#{ENV['CPV_NAME'].downcase}.io").domain(@hostname)
   name_to_delete = core_dns_domain.list.find{ |x| x["host"] == @ip_before_change }["name"]
   core_dns_domain.delete({"name" => name_to_delete})
 rescue => e
@@ -37,7 +37,7 @@ def create_dns_record
              @hostname
            end
 
-  new_core_dns_domain = CoreDns::Etcd.new("etcd.dns.#{@location}.icdc.io").domain(domain)
+  new_core_dns_domain = CoreDns::Etcd.new("etcd.dns.#{@location}.#{ENV['CPV_NAME'].downcase}.io").domain(domain)
   ip_address_free = new_core_dns_domain.list.select{ |x| x["host"] == @ip_a }.empty?
   return unless check_domain_length(domain, hostname_first_part) && @ip_a && ip_address_free
 
