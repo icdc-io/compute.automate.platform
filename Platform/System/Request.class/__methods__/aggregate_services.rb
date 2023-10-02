@@ -4,7 +4,7 @@ bundle_name = $evm.root['dialog_new_name']
 service2 = $evm.vmdb(:service).find_by(:id => to_srv).root_service
 $evm.log(:info, "Start aggregate #{service1.id} and #{service2.id} ")
 
-template_id = $evm.vmdb(:ServiceTemplate).where("name like ?", "Clone Service%").first.id
+template_id = $evm.vmdb(:ServiceTemplate).find_by(:name => "Clone Service").id
 
 if bundle_name.empty?
   bundle_name = service1.name.to_s + " bundle"
