@@ -16,7 +16,7 @@ module Platform
           end
 
           def bundle_name
-            @bundle_name ||= @handle.root['dialog_new_name'] # TODO: fix in ui
+            @bundle_name ||= @handle.root['dialog_new_name'] # TODO: add feature in ui
             @bundle_name = "#{@service1.name} and #{@service2.name} bundle" if @bundle_name.blank?
             @bundle_name
           end
@@ -29,28 +29,13 @@ module Platform
             elsif @service1.all_service_children.blank? && @service2.all_service_children.present?
               @service1.parent_service = @service2
             elsif @service1.all_service_children.present? && @service2.all_service_children.present?
-              aggregate_services_with_all_service_children
+              aggregate_services_with_new_one
             elsif @service1.all_service_children.blank? && @service2.all_service_children.blank?
-              aggregate_services_without_all_service_children
+              aggregate_services_with_new_one
             end
           end
 
-          def aggregate_services_with_all_service_children
-            new_service = create_aggregated_service
-
-            @service1.all_service_children.each { |child_service1| child_service1.parent_service = new_service }
-            @service2.all_service_children.each { |child_service2| child_service2.parent_service = new_service }
-
-            @service1.root_service.retire_now
-            sleep 10
-
-            @service2.root_service.retire_now
-            sleep 10
-
-            @handle.instantiate('/Service/Retirement/StateMachines/ServiceRetirement/Default')
-          end
-
-          def aggregate_services_without_all_service_children
+          def aggregate_services_with_new_one
             new_service = create_aggregated_service
 
             @service1.parent_service = new_service
