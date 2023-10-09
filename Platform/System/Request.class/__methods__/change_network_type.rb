@@ -24,8 +24,14 @@ def change_network_type_power(vm)
   raise NotImplementedError
 end
 
-service = $evm.root['service']
-service.vms.each do |vm|
+vm_id = $evm.root['dialog_vm_id']
+vms = if vm_id == 'all'
+        $evm.root['service'].vms
+      else
+        $evm.vmdb(:Vm).where(:id => vm_id)
+      end
+
+vms.each do |vm|
   vendor = vm.vendor
   case vendor
   when "redhat"

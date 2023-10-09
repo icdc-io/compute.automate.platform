@@ -9,9 +9,9 @@ module Platform
           def initialize(handle = $evm)
             @handle = handle
             @handle.instantiate('/Operator/Configuration/Email/Default')
-			@handle.instantiate('/Operator/Configuration/Location/Default')
+	    @handle.instantiate('/Operator/Configuration/Location/Default')
             @email_attributes = @handle.object('/Operator/Configuration/Email/Default').attributes
-  			@location_attributes = @handle.object('/Operator/Configuration/Location/Default').attributes
+  	    @location_attributes = @handle.object('/Operator/Configuration/Location/Default').attributes
             @network_name = @handle.root['new_network_name']
             @service = @handle.root['service']
             @vm = @handle.root['vm']
@@ -22,7 +22,7 @@ module Platform
             main_links
             email_params
             @handle.log(:info, "Sending email to <#{@to}> from <#{@from}>")
-  			@handle.execute('send_email', @to, @from, @subject, @body)
+            @handle.execute('send_email', @to, @from, @subject, @body)
           end
           
           private
