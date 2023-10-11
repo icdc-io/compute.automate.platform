@@ -27,4 +27,4 @@ owners_info["old_name"] = old_owner.name
 owners_info["old_email"] = old_owner.userid
 
 $evm.set_state_var(:owners_info, owners_info)
-send_email
+Platform::Automate::Service::Email::OwnershipChanging.new.send_email
