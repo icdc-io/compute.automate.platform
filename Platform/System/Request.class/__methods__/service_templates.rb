@@ -1,4 +1,2 @@
-list = {}
-$evm.root['ext_management_system'].tenant.service_templates.each { |service_template| list[service_template.id] = service_template.name }
-$evm.object['values'] = list
-$evm.object["data_type"] = "string"
+$evm.object['values'] = $evm.root['ext_management_system'].tenant.children.collect(&:service_templates).flatten.map { |t| {t.id => t.name} }.inject(&:merge)
+$evm.object['data_type'] = 'string'
