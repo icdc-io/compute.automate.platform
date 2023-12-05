@@ -37,13 +37,17 @@ vmdb
 rake evm:export:customization_templates -- --directory=/opt/manageiq/automation/platform/customization_templates
 ```
 
-Export tags and prepare commit:
- - as it exports all tags, so remove extra tags not related to template-provision
+### Tags
 
 ```bash
 vmdb
 rake evm:export:tags -- --directory=/opt/manageiq/automation/platform/tags
 ```
 
-TODO: export buttons
+As it exports all definitions:
+
+1. DO NOT USE `git add .`
+2. add and commit only required definitions
+3. remove not related files: `rm -rf tags/*`
+4. git restore required files: `git restore tags`
 

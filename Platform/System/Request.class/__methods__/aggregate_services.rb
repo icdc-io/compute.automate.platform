@@ -1,62 +1,68 @@
-service1 = $evm.root['service'].root_service
-to_srv = $evm.root['dialog_merge_id']
-bundle_name = $evm.root['dialog_new_name']
-service2 = $evm.vmdb(:service).find_by(:id => to_srv).root_service
-$evm.log(:info, "Start aggregate #{service1.id} and #{service2.id} ")
+module Platform
+  module Automate
+    module System
+      module Request
+        class AggregateServices
+          def initialize(handle = $evm)
+            @handle = handle
+            @service1 = @handle.root['service'].root_service
+            @service2 = @handle.vmdb(:Service).find_by(id: @handle.root['dialog_merge_id']).root_service
+          end
 
-template_id = $evm.vmdb(:ServiceTemplate).find_by(:name => "Clone Service #{service1.miq_region.description.upcase}").id
+          def main
+            @handle.log(:info, "Start aggregate #{@service1.name} (#{@service1.id}) and #{@service2.name} (#{@service2.id})")
+            aggregate_services
+            @handle.log(:info, 'End aggregare services')
+          end
 
-if bundle_name.empty?
-  bundle_name = service1.name.to_s + " bundle"
-end
-if service1.all_service_children.present?
-  if service2.all_service_children.blank?
-    service2.parent_service = service1
-    exit MIQ_OK
-  end
-end
-if service1.all_service_children.blank?
-  if service2.all_service_children.present?
-    service1.parent_service = service2
-    exit MIQ_OK
-  end
-end
-if service1.all_service_children.present?
-  if service2.all_service_children.present?
-    new_service = $evm.vmdb('service').create(:name => bundle_name)
-    new_service.display = true
-    new_service.description = "Bundle service #{service1.name} and #{service2.name}"
-    # Template id = id Empty Service Template
-    new_service[:service_template_id] = template_id
-    owner = $evm.vmdb(:user).find_by(:id => service1.evm_owner_id)
-    new_service.owner = owner if owner
-    new_service.group = owner.current_group if owner
-    service1.all_service_children.each do |child_service1|
-      child_service1.parent_service = new_service
+          def bundle_name
+            @bundle_name ||= @handle.root['dialog_new_name'] # TODO: add feature in ui
+            @bundle_name = "#{@service1.name} and #{@service2.name} bundle" if @bundle_name.blank?
+            @bundle_name
+          end
+
+          private
+
+          def aggregate_services
+            if @service1.all_service_children.present? && @service2.all_service_children.blank?
+              @service2.parent_service = @service1
+            elsif @service1.all_service_children.blank? && @service2.all_service_children.present?
+              @service1.parent_service = @service2
+            elsif @service1.all_service_children.present? && @service2.all_service_children.present?
+              aggregate_services_with_new_one
+            elsif @service1.all_service_children.blank? && @service2.all_service_children.blank?
+              aggregate_services_with_new_one
+            end
+          end
+
+          def aggregate_services_with_new_one
+            new_service = create_aggregated_service
+
+            @service1.parent_service = new_service
+            @service2.parent_service = new_service
+          end
+
+          def create_aggregated_service
+            new_service = @handle.vmdb('service').create(name: bundle_name)
+            new_service.display = true
+            new_service.description = "Bundle service #{@service1.name} and #{@service2.name}"
+
+            # Template id = id Empty Service Template
+            template_id = @handle.vmdb(:ServiceTemplate).find_by(name: 'Clone Service').id
+            new_service[:service_template_id] = template_id
+            owner = @handle.vmdb(:user).find_by(id: @service1.evm_owner_id)
+
+            if owner
+              new_service.owner = owner
+              new_service.group = owner.current_group
+            end
+
+            new_service
+          end
+        end
+      end
     end
-    service2.all_service_children.each do |child_service2|
-      child_service2.parent_service = new_service
-    end
-    service1.root_service.retire_now
-    sleep 10
-    service2.root_service.retire_now
-    sleep 10
-    $evm.instantiate("/Service/Retirement/StateMachines/ServiceRetirement/Default")
-    exit MIQ_OK
   end
 end
-if service1.all_service_children.blank?
-  if service2.all_service_children.blank?
-    new_service = $evm.vmdb('service').create(:name => bundle_name)
-    new_service.display = true
-    new_service.description = "Bundle service #{service1.name} and #{service2.name}"
-    # Template id = id Empty Service Template
-    new_service[:service_template_id] = template_id
-    owner = $evm.vmdb(:user).find_by(:id => service1.evm_owner_id)
-    new_service.owner = owner if owner
-    new_service.group = owner.current_group if owner
-    service1.parent_service = new_service
-    service2.parent_service = new_service
-    exit MIQ_OK
-  end
-end
+
+Platform::Automate::System::Request::AggregateServices.new.main
