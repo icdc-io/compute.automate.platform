@@ -5,12 +5,14 @@ module Platform
         class OwnershipChanging
           def initialize(handle = $evm)
             @handle = handle
-            @handle.instantiate('/Operator/Configuration/Email/Default')
-            attributes = @handle.object('/Operator/Configuration/Email/Default').attributes
+            @handle.instantiate('/Configuration/Email/Default')
+            attributes = @handle.object('/Configuration/Email/Default').attributes
             @footer = attributes['signature'].to_s
             @from = attributes['from'].to_s
             @service = @handle.root['Service']
-            @location = @service.region_description.downcase 
+            @location = @service.region_description.downcase
+            @cpv_domain = "#{ENV['CPV_NAME'].downcase}.io"
+            @url_segment = @cpv_domain == 'icdc.io' ? 'Services' : 'Use_of_the_Services'
           end
 
           def send_email
@@ -22,9 +24,9 @@ module Platform
         
           private
 
-		  def main_links
-            @service_url = "compute.#{@location}.#{ENV['CPV_NAME'].downcase}.io/ui/service/services/#{@service.id}"
-            @help_link = "https://help.#{ENV['CPV_NAME'].downcase}.io/compute/ru/Use_of_the_Services/Configuration/Change_Service_Ownership.html"
+	  def main_links
+            @service_url = "compute.#{@location}.#{@cpv_domain}/ui/service/services/#{@service.id}"
+            @help_link = "https://help.#{@cpv_domain}/compute/en/#{@url_segment}/Configuration/Change_Service_Ownership.html"
           end
         
           def email_params
@@ -33,7 +35,7 @@ module Platform
             @old_owner_name = owners_info['old_name']
             @old_owner_email = owners_info['old_email']
             @to = owners_info['new_email']
-            @subject = "[#{ENV['CPV_NAME']}.IO] Change ownership of service- #{@service.name}"
+            @subject = "[Compute] Change ownership of service- #{@service.name}"
             @body = message_body
           end
         
@@ -74,7 +76,7 @@ module Platform
                       "</tr>"\
                       "<tr>"\
                           "<td>Other access types</td>"\
-                          "<td><a href='https://help.#{ENV['CPV_NAME'].downcase}.io/compute/ru/Use_of_the_Services/VM/Service_Access.html'>read more</a></td>"\
+                          "<td><a href='https://help.#{@cpv_domain}/compute/ru/#{@url_segment}/VM/Service_Access.html'>read more</a></td>"\
                           "<td></td>"\
                           "<td></td>"\
                       "</tr>"
