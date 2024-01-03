@@ -9,14 +9,14 @@ module Platform
           def initialize(handle = $evm)
             @handle = handle
             @handle.instantiate('/Configuration/Email/Default')
-            @handle.instantiate('/Configuration/Location/Default')
+	    @handle.instantiate('/Configuration/Location/Default')
             @email_attributes = @handle.object('/Configuration/Email/Default').attributes
   	    @location_attributes = @handle.object('/Configuration/Location/Default').attributes
             @network_name = @handle.root['new_network_name']
             @service = @handle.root['service']
             @vm = @handle.root['vm']
             @location = @service.region_description.downcase
-            @cpv_domain = "#{ENV['CPV_NAME'].downcase}.io"
+            @cpv_domain = @location_attributes['cpv_domain']
           end
           
           def send_email
@@ -32,8 +32,7 @@ module Platform
             @link_service = "https://compute.#{@location}.#{@cpv_domain}/ui/service/services/#{@service.id}"
             @link_vm = "#{@link_service}/resource=#{@vm.id}"
             link_help = "https://help.#{@cpv_domain}"
-            url_segment = @cpv_domain == 'icdc.io' ? 'Services' : 'Use_of_the_Services'
-            @link_help_share = "#{link_help}/compute/en/#{url_segment}/Networks/network_change.html"
+            @link_help_share = "#{link_help}/compute/en/Services/Networks/Network_change.html"
           end
           
           def email_params

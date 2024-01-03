@@ -6,10 +6,11 @@ module Platform
           def initialize(handle = $evm)
             @handle = handle
             @handle.instantiate('/Configuration/Email/Default')
+            @handle.instantiate('/Configuration/Location/Default')
             attributes = @handle.object('/Configuration/Email/Default').attributes
             @footer = attributes['signature'].to_s
             @from = attributes['from']
-            @cpv_domain = "#{ENV['CPV_NAME'].downcase}.io"
+            @cpv_domain = @handle.object('/Configuration/Location/Default').attributes['cpv_domain']
             @owner_name = @handle.vmdb(:User).find_by(:id => @handle.root['ownerId'])['name']
             @service = @handle.vmdb(:Service).find_by(:id => @handle.root['serviceId'].to_i)
           end
@@ -38,8 +39,7 @@ module Platform
           def main_links
             @link_service = "https://compute.#{@service.region_description.downcase}.#{@cpv_domain}/ui/service/services/#{@service.id}"
             link_help = "https://help.#{@cpv_domain}"
-            url_segment = @cpv_domain == 'icdc.io' ? 'Services' : 'Use_of_the_Services'
-            @link_help_share = "#{link_help}/compute/en/#{url_segment}/Sharing_Service.html"
+            @link_help_share = "#{link_help}/compute/en/Services/Sharing_Service.html"
           end
           
           def email_params

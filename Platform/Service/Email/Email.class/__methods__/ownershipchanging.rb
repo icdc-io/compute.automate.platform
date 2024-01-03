@@ -6,13 +6,13 @@ module Platform
           def initialize(handle = $evm)
             @handle = handle
             @handle.instantiate('/Configuration/Email/Default')
+            @handle.instantiate('/Configuration/Location/Default')
             attributes = @handle.object('/Configuration/Email/Default').attributes
             @footer = attributes['signature'].to_s
             @from = attributes['from'].to_s
             @service = @handle.root['Service']
             @location = @service.region_description.downcase
-            @cpv_domain = "#{ENV['CPV_NAME'].downcase}.io"
-            @url_segment = @cpv_domain == 'icdc.io' ? 'Services' : 'Use_of_the_Services'
+            @cpv_domain = @handle.object('/Configuration/Location/Default').attributes['cpv_domain']
           end
 
           def send_email
@@ -26,7 +26,7 @@ module Platform
 
 	  def main_links
             @service_url = "compute.#{@location}.#{@cpv_domain}/ui/service/services/#{@service.id}"
-            @help_link = "https://help.#{@cpv_domain}/compute/en/#{@url_segment}/Configuration/Change_Service_Ownership.html"
+            @help_link = "https://help.#{@cpv_domain}/compute/en/Services/Configuration/Change_Service_Ownership.html"
           end
         
           def email_params
@@ -76,7 +76,7 @@ module Platform
                       "</tr>"\
                       "<tr>"\
                           "<td>Other access types</td>"\
-                          "<td><a href='https://help.#{@cpv_domain}/compute/ru/#{@url_segment}/VM/Service_Access.html'>read more</a></td>"\
+                          "<td><a href='https://help.#{@cpv_domain}/compute/en/Services/VM/Service_Access.html'>read more</a></td>"\
                           "<td></td>"\
                           "<td></td>"\
                       "</tr>"
