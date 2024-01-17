@@ -23,7 +23,7 @@ module Platform
           private
 
           def send_email_messages
-            exit MIQ_WARN if @handle.root['ae_result'] == 'retry'
+            exit MIQ_STOP if @handle.root['ae_result'] == 'retry'
 
             vms.each do |vm|
               @handle.root['vm'] = vm
@@ -133,7 +133,7 @@ module Platform
             @vm = vm
             @vm_ip_before_change = vm.ipaddresses.first
             @vm_hostname = vm_hostname(vm)
-            @vm_location = @vm.miq_provision.region_description.downcase
+            @vm_location = @vm.service.region_description.downcase
             @vm_account = vm_account(vm)
             @vm_ip = vm_ip
           end
@@ -200,4 +200,4 @@ module Platform
   end
 end
 
-Platform::Automate::System::Request::RegisterDnsWithinNetworkChange.new.main
+# Platform::Automate::System::Request::RegisterDnsWithinNetworkChange.new.main outdated

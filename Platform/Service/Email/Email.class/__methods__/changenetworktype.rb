@@ -1,6 +1,7 @@
 #
 # Developer: ahrechushkin@ibagroup.eu
 #
+
 module Platform
   module Automate
     module Service
@@ -9,9 +10,9 @@ module Platform
           def initialize(handle = $evm)
             @handle = handle
             @handle.instantiate('/Configuration/Email/Default')
-	    @handle.instantiate('/Configuration/Location/Default')
+            @handle.instantiate('/Configuration/Location/Default')
             @email_attributes = @handle.object('/Configuration/Email/Default').attributes
-  	    @location_attributes = @handle.object('/Configuration/Location/Default').attributes
+            @location_attributes = @handle.object('/Configuration/Location/Default').attributes
             @network_name = @handle.root['new_network_name']
             @service = @handle.root['service']
             @vm = @handle.root['vm']
@@ -23,7 +24,7 @@ module Platform
             main_links
             email_params
             @handle.log(:info, "Sending email to <#{@to}> from <#{@from}>")
-  	    @handle.execute('send_email', @to, @from, @subject, @body)
+            @handle.execute('send_email', @to, @from, @subject, @body)
           end
           
           private
