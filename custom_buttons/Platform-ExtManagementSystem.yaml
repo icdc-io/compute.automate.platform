@@ -1,0 +1,57 @@
+---
+custom_button_set:
+- attributes:
+    name: Platform|ExtManagementSystem|
+    description: Platform
+    set_type: CustomButtonSet
+    guid: 72c2df30-b088-4c6e-8b1d-18639802643c
+    read_only: 
+    set_data:
+      :button_order:
+      - 26000000000134
+      :button_icon: fa fa-cloud
+      :display: true
+      :applies_to_class: ExtManagementSystem
+      :group_index: 1
+    mode: 
+    owner_type: 
+    owner_id: 
+    userid: 
+    group_id: 
+  children:
+    custom_button:
+    - attributes:
+        guid: f8b2c1b0-b374-44e7-a57e-c7f67f55d008
+        description: Add Custom Attribute
+        applies_to_class: ExtManagementSystem
+        visibility_expression: 
+        options:
+          :button_icon: fa fa-ticket
+          :button_type: default
+          :display: true
+          :open_url: false
+          :display_for: single
+          :submit_how: one
+        userid: admin
+        wait_for_complete: 
+        name: Add Custom Attribute
+        visibility:
+          :roles:
+          - _ALL_
+        applies_to_id: 
+        enablement_expression: 
+        disabled_text: 
+      associations:
+        resource_action:
+        - attributes:
+            action: 
+            resource_type: CustomButton
+            ae_namespace: SYSTEM
+            ae_class: PROCESS
+            ae_instance: Request
+            ae_message: create
+            ae_attributes:
+              request: ServiceTemplateAddCustomAttribute
+            configuration_template_id: 
+            configuration_template_type: 
+            dialog_name: Service Template

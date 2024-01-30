@@ -1,22 +1,20 @@
 ---
 custom_button_set:
 - attributes:
-    name: Service|Service|
-    description: Service
+    name: Platform|Service|
+    description: Platform
     set_type: CustomButtonSet
-    guid: f020056d-12f8-4e10-a2dd-a2c313f6d6a9
+    guid: acb8db76-190c-427f-b48b-96a7ad4e5a4b
     read_only: 
     set_data:
       :button_order:
-      - 19000000000001
-      - 19000000000003
-      - 19000000000004
-      - 19000000000002
-      - 19000000000005
-      :button_icon: ff ff-action
+      - 26000000000120
+      - 26000000000117
+      - 26000000000115
+      :button_icon: fa fa-cloud
       :display: true
-      :group_index: 1
       :applies_to_class: Service
+      :group_index: 1
     mode: 
     owner_type: 
     owner_id: 
@@ -25,143 +23,7 @@ custom_button_set:
   children:
     custom_button:
     - attributes:
-        guid: 89774318-da1d-4fea-8602-fd94e27030ff
-        description: undo_backup
-        applies_to_class: Service
-        visibility_expression: 
-        options:
-          :button_icon: ff ff-hexagon
-          :button_type: default
-          :display: true
-          :open_url: false
-          :display_for: single
-          :submit_how: one
-        userid: admin
-        wait_for_complete: 
-        name: undo_backup
-        visibility:
-          :roles:
-          - _ALL_
-        applies_to_id: 
-        enablement_expression: 
-        disabled_text: 
-      associations:
-        resource_action:
-        - attributes:
-            action: 
-            resource_type: CustomButton
-            ae_namespace: SYSTEM
-            ae_class: PROCESS
-            ae_instance: Request
-            ae_message: create
-            ae_attributes:
-              request: undo_backup
-            configuration_template_id: 
-            configuration_template_type: 
-    - attributes:
-        guid: 296dcb90-4fa5-4d01-ab8c-10d704432649
-        description: save_backup
-        applies_to_class: Service
-        visibility_expression: 
-        options:
-          :button_icon: ff ff-hexagon
-          :button_type: default
-          :display: true
-          :open_url: false
-          :display_for: single
-          :submit_how: one
-        userid: admin
-        wait_for_complete: 
-        name: save_backup
-        visibility:
-          :roles:
-          - _ALL_
-        applies_to_id: 
-        enablement_expression: 
-        disabled_text: 
-      associations:
-        resource_action:
-        - attributes:
-            action: 
-            resource_type: CustomButton
-            ae_namespace: SYSTEM
-            ae_class: PROCESS
-            ae_instance: Request
-            ae_message: create
-            ae_attributes:
-              request: save_backup
-            configuration_template_id: 
-            configuration_template_type: 
-    - attributes:
-        guid: 7ac4ccd0-a6c6-4e72-9fc0-4c908c674a20
-        description: restore_backup
-        applies_to_class: Service
-        visibility_expression: 
-        options:
-          :button_icon: ff ff-hexagon
-          :button_type: default
-          :display: true
-          :open_url: false
-          :display_for: single
-          :submit_how: one
-        userid: admin
-        wait_for_complete: 
-        name: restore_backup
-        visibility:
-          :roles:
-          - _ALL_
-        applies_to_id: 
-        enablement_expression: 
-        disabled_text: 
-      associations:
-        resource_action:
-        - attributes:
-            action: 
-            resource_type: CustomButton
-            ae_namespace: SYSTEM
-            ae_class: PROCESS
-            ae_instance: Request
-            ae_message: create
-            ae_attributes:
-              request: restore_backup
-            configuration_template_id: 
-            configuration_template_type: 
-    - attributes:
-        guid: 7afb3148-7a7b-4461-a13e-ebaf6086e2f9
-        description: delete_backup
-        applies_to_class: Service
-        visibility_expression: 
-        options:
-          :button_icon: ff ff-hexagon
-          :button_type: default
-          :display: true
-          :open_url: false
-          :display_for: single
-          :submit_how: one
-        userid: admin
-        wait_for_complete: 
-        name: delete_backup
-        visibility:
-          :roles:
-          - _ALL_
-        applies_to_id: 
-        enablement_expression: 
-        disabled_text: 
-      associations:
-        resource_action:
-        - attributes:
-            action: 
-            resource_type: CustomButton
-            ae_namespace: SYSTEM
-            ae_class: PROCESS
-            ae_instance: Request
-            ae_message: create
-            ae_attributes:
-              request: RemoveBackup
-            configuration_template_id: 
-            configuration_template_type: 
-    - attributes:
-        guid: 7f49fa60-f708-4514-b469-65a1cba1f91d
+        guid: 85539d23-4546-43fc-b25c-df919a524557
         description: call_automation
         applies_to_class: Service
         visibility_expression: 
@@ -194,3 +56,74 @@ custom_button_set:
               request: CallAutomation
             configuration_template_id: 
             configuration_template_type: 
+            dialog_name: call_automation
+    - attributes:
+        guid: d6e6093d-576d-42d0-8e56-be1b980e1118
+        description: aggregate_services
+        applies_to_class: Service
+        visibility_expression: 
+        options:
+          :button_icon: ff ff-hexagon
+          :button_type: default
+          :display: true
+          :open_url: false
+          :display_for: single
+          :submit_how: one
+        userid: admin
+        wait_for_complete: 
+        name: aggregate_services
+        visibility:
+          :roles:
+          - _ALL_
+        applies_to_id: 
+        enablement_expression: 
+        disabled_text: 
+      associations:
+        resource_action:
+        - attributes:
+            action: 
+            resource_type: CustomButton
+            ae_namespace: SYSTEM
+            ae_class: PROCESS
+            ae_instance: Request
+            ae_message: create
+            ae_attributes:
+              request: aggregate_services
+            configuration_template_id: 
+            configuration_template_type: 
+            dialog_name: aggregate_services
+    - attributes:
+        guid: 2d7f595e-aca8-4608-8480-b893321df723
+        description: change_ownership
+        applies_to_class: Service
+        visibility_expression: 
+        options:
+          :button_icon: ff ff-hexagon
+          :button_type: default
+          :display: true
+          :open_url: false
+          :display_for: single
+          :submit_how: one
+        userid: admin
+        wait_for_complete: 
+        name: change_ownership
+        visibility:
+          :roles:
+          - _ALL_
+        applies_to_id: 
+        enablement_expression: 
+        disabled_text: 
+      associations:
+        resource_action:
+        - attributes:
+            action: 
+            resource_type: CustomButton
+            ae_namespace: SYSTEM
+            ae_class: PROCESS
+            ae_instance: Request
+            ae_message: create
+            ae_attributes:
+              request: ChangeOwnership
+            configuration_template_id: 
+            configuration_template_type: 
+            dialog_name: change_ownership-ZBY
