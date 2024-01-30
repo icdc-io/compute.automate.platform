@@ -3,10 +3,10 @@ object_type: namespace
 version: 1.0
 object:
   attributes:
-    name: Configuration
+    name: Network
     description: ''
     display_name: 
     priority: 
     enabled: 
-    ancestry: '26000000000290'
-    relative_path: Configuration
+    ancestry: 26000000000290/26000000000582
+    relative_path: Service/Network
