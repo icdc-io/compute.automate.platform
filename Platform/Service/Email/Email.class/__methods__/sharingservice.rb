@@ -5,12 +5,12 @@ module Platform
         class SharingService
           def initialize(handle = $evm)
             @handle = handle
-            @handle.instantiate('/Operator/Configuration/Email/Default')
-            @handle.instantiate('/Operator/Configuration/Location/Default')
-            email_attributes = @handle.object('/Operator/Configuration/Email/Default').attributes
-            @footer = email_attributes['signature'].to_s
-            @from = email_attributes['from']
-            @cpv_domain = @handle.object('/Operator/Configuration/Location/Default').attributes['cpv_domain']
+            @handle.instantiate('/Configuration/Email/Default')
+            @handle.instantiate('/Configuration/Location/Default')
+            attributes = @handle.object('/Configuration/Email/Default').attributes
+            @footer = attributes['signature'].to_s
+            @from = attributes['from']
+            @cpv_domain = @handle.object('/Configuration/Location/Default').attributes['cpv_domain']
             @owner_name = @handle.vmdb(:User).find_by(:id => @handle.root['ownerId'])['name']
             @service = @handle.vmdb(:Service).find_by(:id => @handle.root['serviceId'].to_i)
           end
@@ -37,14 +37,14 @@ module Platform
           end
           
           def main_links
-            @link_service = "https://compute.#{@service.region_description.downcase}.#{ENV['CPV_NAME'].downcase}.io/ui/service/services/#{@service.id}"
+            @link_service = "https://compute.#{@service.region_description.downcase}.#{@cpv_domain}/ui/service/services/#{@service.id}"
             link_help = "https://help.#{@cpv_domain}"
-            @link_help_share = "#{link_help}/compute/ru/Use_of_the_Services/Sharing_Service.html"
+            @link_help_share = "#{link_help}/compute/en/Services/Sharing_Service.html"
           end
           
           def email_params
             users_emails
-            @subject = "[#{ENV['CPV_NAME']}.IO] Common access - #{@service['name']}"
+            @subject = "[Compute] Common access - #{@service['name']}"
             @body = "<h3>Hello!</h3>"
             @body += "User #{@owner_name} has given you access to the service:: <a href='#{@link_service}'>#{@service['name']}</a>"
             @body += "<br><br><a href='#{@link_help_share}'>More info</a> on sharing the service.<br><br>"
