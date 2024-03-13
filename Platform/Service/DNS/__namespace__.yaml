@@ -1,0 +1,12 @@
+---
+object_type: namespace
+version: 1.0
+object:
+  attributes:
+    name: DNS
+    description: ''
+    display_name: 
+    priority: 
+    enabled: 
+    ancestry: 26000000000290/26000000000582
+    relative_path: Service/DNS

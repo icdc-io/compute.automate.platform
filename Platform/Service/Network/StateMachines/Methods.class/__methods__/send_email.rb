@@ -10,33 +10,23 @@ module Platform
 
             def main
               @handle.log(:info, "Sending email messages for service #{service.name} (#{service.id})")
-              send_email_messages
+              send_email_message
               @handle.log(:info, 'End sending email messages')
             end
 
             private
 
-            def send_email_messages
-              vms.each do |vm|
-                @handle.root['vm'] = vm
-                Platform::Automate::Service::Email::ChangeNetworkType.new.send_email
-              end
+            def send_email_message
+              @handle.root['vm'] = vm
+              Platform::Automate::Service::Email::ChangeNetworkType.new.send_email
             end
 
             def service
               @service ||= @handle.root['service']
             end
 
-            def vms
-              @vms ||= if network_change_for_all_vms?
-                         service.vms
-                       else
-                         @handle.vmdb(:Vm).where(id: @handle.root['dialog_vm_id'])
-                       end
-            end
-
-            def network_change_for_all_vms?
-              @handle.root['dialog_vm_id'] == 'all'
+            def vm
+              @vm ||= @handle.vmdb(:Vm).find(@handle.root['dialog_vm_id'])
             end
           end
         end

@@ -19,15 +19,13 @@ module Platform
             private
 
             def change_network_type
-              vms.each do |vm|
-                @handle.log(:info, "Changing network type for vm #{vm.name} (#{vm.id})")
+              @handle.log(:info, "Changing network type for vm #{vm.name} (#{vm.id})")
 
-                case vm.vendor
-                when 'redhat'
-                  change_network_type_redhat(vm)
-                when 'power_systems'
-                  change_network_type_power(vm)
-                end
+              case vm.vendor
+              when 'redhat'
+                change_network_type_redhat(vm)
+              when 'power_systems'
+                change_network_type_power(vm)
               end
             end
 
@@ -41,31 +39,39 @@ module Platform
 
               new_vlan = @handle.root['dialog_network_profile']
               new_nic_id = connection.system_service.vnic_profiles_service.list.find { |x| x.name == new_vlan }.id
-              return if nic.vnic_profile.id == new_nic_id || nic_id == new_nic_id
+
+              if nic.vnic_profile.id == new_nic_id || nic_id == new_nic_id
+              	@handle.log(:info, "New network type is the same as original one. Aborting...")
+                exit MIQ_ABORT
+              end
 
               add_security_groups_info(vm, nic_id)
+              add_vm_old_ip_info(vm)
               set_vnic_profile(vm_service, nics_service, nic_id, new_nic_id)
+            end
 
-              @handle.set_state_var(:security_groups_info, security_groups_info)
+            def add_vm_old_ip_info(vm)
+              network_ports = @handle.vmdb(:NetworkPort).where(device_id: vm.hardware.nics.pluck(:id))
+              vm_old_ip = network_ports.collect(&:ipaddresses).flatten.compact.first
+              @handle.set_state_var(:vm_old_ip, vm_old_ip)
             end
 
             def add_security_groups_info(vm, nic_id)
+              security_groups_info = nil
+
               port = @handle.vmdb(:NetworkPort).find_by(device_ref: nic_id)
               port_security_groups = port.security_groups.collect(&:ems_ref)
-              return if port_security_groups.empty?
 
-              data = {
-                vm_id: vm.id,
-                nic_id: nic_id,
-                old_port_id: port.ems_ref,
-                port_security_groups: port_security_groups
-              }
+              if port_security_groups.present?
+                security_groups_info = {
+                  vm_id: vm.id,
+                  nic_id: nic_id,
+                  old_port_id: port.ems_ref,
+                  port_security_groups: port_security_groups
+                }
+              end
 
-              security_groups_info.push(data)
-            end
-
-            def security_groups_info
-              @security_groups_info ||= []
+              @handle.set_state_var(:security_groups_info, security_groups_info)
             end
 
             def change_network_type_power(vm)
@@ -90,16 +96,8 @@ module Platform
               @service ||= @handle.root['service']
             end
 
-            def vms
-              @vms ||= if network_change_for_all_vms?
-                         service.vms
-                       else
-                         @handle.vmdb(:Vm).where(id: @handle.root['dialog_vm_id'])
-                       end
-            end
-
-            def network_change_for_all_vms?
-              @handle.root['dialog_vm_id'] == 'all'
+            def vm
+              @vm ||= @handle.vmdb(:Vm).find(@handle.root['dialog_vm_id'])
             end
           end
         end
