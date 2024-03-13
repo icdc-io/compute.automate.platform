@@ -9,5 +9,7 @@ object:
     scope: instance
     language: ruby
     location: inline
+    embedded_methods:
+    - "/Service/DNS/Redhat/dns"
     relative_path: Service/Network/StateMachines/Methods/register_dns
   inputs: []
