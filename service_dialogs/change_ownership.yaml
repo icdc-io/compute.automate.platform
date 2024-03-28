@@ -1,7 +1,7 @@
 ---
 - description: change_ownership
   buttons: submit,cancel
-  label: change_ownership-SBG
+  label: change_ownership
   dialog_tabs:
   - description: 
     display: 

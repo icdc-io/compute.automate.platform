@@ -126,4 +126,4 @@ custom_button_set:
               request: ChangeOwnership
             configuration_template_id: 
             configuration_template_type: 
-            dialog_name: change_ownership-ZBY
+            dialog_name: change_ownership
