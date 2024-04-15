@@ -1,0 +1,12 @@
+---
+object_type: namespace
+version: 1.0
+object:
+  attributes:
+    name: ResetPassword
+    description: ''
+    display_name: 
+    priority: 
+    enabled: 
+    ancestry: 26000000000290/26000000000649/26000000000650
+    relative_path: Infrastructure/VM/ResetPassword

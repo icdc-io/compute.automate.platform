@@ -1,0 +1,60 @@
+---
+custom_button_set:
+- attributes:
+    name: Platform|Vm|
+    description: Platform
+    set_type: CustomButtonSet
+    guid: 3e089526-8a6f-4f41-a219-b11cb7067a48
+    read_only: 
+    set_data:
+      :button_order:
+      - 26000000000135
+      :button_icon: ff ff-hexagon
+      :display: true
+      :applies_to_class: Vm
+      :group_index: 3
+    mode: 
+    owner_type: 
+    owner_id: 
+    userid: 
+    group_id: 
+  children:
+    custom_button:
+    - attributes:
+        guid: 5b995e17-dd8b-4759-9399-110760cbf4ed
+        description: Reset password
+        applies_to_class: Vm
+        visibility_expression: 
+        options:
+          :button_icon: pficon pficon-key
+          :button_type: default
+          :display: true
+          :open_url: false
+          :display_for: single
+          :submit_how: all
+        userid: admin
+        wait_for_complete: 
+        name: Reset password
+        visibility:
+          :roles:
+          - _ALL_
+        applies_to_id: 
+        enablement_expression: 
+        disabled_text: 
+      associations:
+        resource_action:
+        - attributes:
+            action: 
+            resource_type: CustomButton
+            ae_namespace: SYSTEM
+            ae_class: PROCESS
+            ae_instance: Request
+            ae_message: create
+            ae_attributes:
+              Class: VMResetPassword
+              Instance: Default
+              Namespace: "/Infrastructure/VM/ResetPassword/StateMachines"
+              request: Call_Instance
+            configuration_template_id: 
+            configuration_template_type: 
+            dialog_name: Password reset
