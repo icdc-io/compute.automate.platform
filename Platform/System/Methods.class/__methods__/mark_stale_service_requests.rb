@@ -69,6 +69,7 @@ module Platform
               next if service.retirement_state != 'retiring' && service.retired
 
               service.retirement_state = nil
+              service.vms.each { |vm| vm.retirement_state = nil }
               @handle.execute(:create_retire_request, service)
 
               request.object_send(:update, message: 'Request timed out')
