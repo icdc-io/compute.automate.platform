@@ -1,0 +1,12 @@
+---
+object_type: namespace
+version: 1.0
+object:
+  attributes:
+    name: VM
+    description: 
+    display_name: 
+    priority: 
+    enabled: 
+    ancestry: 26000000000290/26000000000649
+    relative_path: Infrastructure/VM
