@@ -142,23 +142,23 @@ module Platform
 
             subject = "[Compute] Backups WatchDog report #{DateTime.now.strftime('%FT%H:%M')}"
             email_builder = EmailBuilder.new
+            
+            all_broken_backups = {
+              'Resumed on snapshot phase' => @resumed_on_snapshot_phase,
+              'Resumed on template phase' => @resumed_on_template_phase,
+              'Broken' => @broken_backups
+            }
 
-            backups_size = @broken_backups.count + @resumed_on_snapshot_phase.count + @resumed_on_template_phase.count
-            email_builder.add_message_header(@start_time, @end_time, backups_size)
+            all_backups_size = all_broken_backups.sum { |type, backups| backups.count }
+            email_builder.add_message_header(@start_time, @end_time, all_backups_size)
 
-            if @resumed_on_snapshot_phase.count.positive?
-              email_builder.add_backups_count('Resumed on snapshot phase', @resumed_on_snapshot_phase.count)
-              email_builder.add_backups_table(@resumed_on_snapshot_phase)
-            end
+            all_broken_backups.each do |type, backups|
+              backups_count = backups.count
 
-            if @resumed_on_template_phase.count.positive?
-              email_builder.add_backups_count('Resumed on template phase', @resumed_on_template_phase.count)
-              email_builder.add_backups_table(@resumed_on_template_phase)
-            end
-
-            if @broken_backups.count.positive?
-              email_builder.add_backups_count('Broken', @broken_backups.count)
-              email_builder.add_backups_table(@broken_backups)
+              if backups_count.positive?
+                email_builder.add_backups_count(type, backups_count)
+                email_builder.add_backups_table(backups)
+              end
             end
 
             email_builder.add_help_link
