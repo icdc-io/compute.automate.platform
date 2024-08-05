@@ -20,133 +20,186 @@ module Platform
           end
 
           def perform
-            @handle.log(:info, "[Backups Watchdog] started at #{DateTime.now}")
-            @handle.log(:info, "#{@max_hours} :: #{@notifications}")
-            backups = stucked_backups
-            @handle.log(:info,
-                        "[Backups Watchdog] Found #{backups.size} stucked backups from #{DateTime.now - @max_hours.hours} to #{@start_time - (@max_hours + 1).hours}")
+            @handle.log(:info, "[Backups Watchdog] started at #{@start_time}")
+            @handle.log(:info, "Max hours: #{@max_hours} :: Notifications: #{@notifications}")
 
-            backups.each do |backup|
-              @handle.log(:info, "[Backups Watchdog] Analyze backup #{backup.name} (#{backup.id})")
-              case backup.status
-              when /snapshot/
-                snapshot_phase(backup)
-              when /template/
-                template_phase(backup)
-              else
-                @broken_backups << backup
-              end
-            end
+            @start_time -= (@max_hours + 1).hours
+            @end_time = @start_time + 1.hour
+
+            backups = stucked_backups(@start_time, @end_time)
+
+            @handle.log(:info, "[Backups Watchdog] Found #{backups.size} stucked backups " \
+                               "from #{@start_time} to #{@end_time}")
+
+            backups.each { |backup| analyze_backup(backup) }
 
             notify_admins
           end
 
           private
 
-          def stucked_backups
-            @handle.vmdb(:GenericObject).where(
+          def stucked_backups(start_time, end_time)
+            backups = @handle.vmdb(:GenericObject).where(
               generic_object_definition_id: Backup.id,
-              created_at: (@start_time - @max_hours.hours)..@start_time  - (@max_hours + 1).hours
-            ).select { |x| x unless %w[ready locked error].include?(x.status) || x.terminated || x.error }
+              created_at: start_time..end_time
+            )
+
+            backups.select do |backup|
+              next if backup.terminated || backup.error
+              next if %w[ready locked restored error].include?(backup.status)
+
+              backup
+            end
           end
 
-          def snapshot_phase(backup)
+          def analyze_backup(backup)
+            @handle.log(:info, "[Backups Watchdog] Analyze backup #{backup.name} (#{backup.id})")
+            case backup.status
+            when /snapshot/
+              fix_snapshot_phase(backup)
+            when /template/
+              fix_template_phase(backup)
+            else
+              @broken_backups << backup
+            end
+          end
+
+          def fix_snapshot_phase(backup)
             snapshot_uuid = backup.snapshot_uuid
+
             unless snapshot_uuid
               @broken_backups << backup
               return
             end
-            snapshot = $evm.vmdb(:Snapshot).find_by(description: snapshot_uuid)
-            template = $evm.vmdb(:VmOrTemplate).find_by(name: backup.name)
 
-            if template
-              template_phase(backup, template)
-              return
-            elsif snapshot
+            snapshot = @handle.vmdb(:Snapshot).find_by(description: snapshot_uuid)
+            template = @handle.vmdb(:VmOrTemplate).find_by(name: backup.name)
 
-              vm = $evm.vmdb(:Vm).find_by!(name: JSON.parse(backup.configuration)['vm_name'])
-              connection = establish_connection(vm)
-              create_template(connection, vm, backup)
+            if template.present?
+              return fix_template_phase(backup, template)
+            elsif snapshot.present?
+              recreate_template(backup)
             else
-              vm = $evm.vmdb(:Vm).find_by!(name: JSON.parse(backup.configuration)['vm_name'])
-              create_snapshot(vm, backup)
+              recreate_snapshot(backup)
             end
 
             @resumed_on_snapshot_phase << backup
           rescue StandardError => e
-            $evm.log(:error, "[BackupsWatchdog] can't resume backup #{backup.name}(#{backup.id}) on snapshot phase
-                    #{e.message}")
+            @handle.log(:error, "[BackupsWatchdog] can't resume backup " \
+                                "#{backup.name} (#{backup.id}) on snapshot phase (#{e.message})")
             @broken_backups << backup
           end
 
-          def template_phase(backup, template = nil)
-            template ||= $evm.vmdb(:VmOrTemplate).find_by(name: backup.name)
+          def fix_template_phase(backup, template = nil)
+            template ||= @handle.vmdb(:VmOrTemplate).find_by(name: backup.name)
 
-            if template
-              @handle.vmdb(:Snapshot).find_by(description: backup.snapshot_uuid).remove
-              backup.template = [template]
-              backup.error = false
-              backup.template = false
-              backup.status = 'ready'
-              backup.save!
+            if template.present?
+              remove_snapshot(backup)
+              reset_backup(backup, template)
             else
-              vm = $evm.vmdb(:Vm).find_by!(name: JSON.parse(backup.configuration)['vm_name'])
-              connection = establish_connection(vm)
-              create_template(connection, vm, backup)
+              recreate_template(backup)
             end
 
-            @resumed_on_template_phase << bakup
+            @resumed_on_template_phase << backup
           rescue StandardError => e
-            $evm.log(:error, "[BackupsWatchdog] can't resume backup #{backup.name}(#{backup.id}) on template phase
-                    #{e.message}")
+            @handle.log(:error, "[BackupsWatchdog] can't resume backup " \
+                                "#{backup.name}(#{backup.id}) on template phase (#{e.message})")
+          end
+
+          def recreate_snapshot(backup)
+            vm = $evm.vmdb(:Vm).find_by!(name: JSON.parse(backup.configuration)['vm_name'])
+            create_snapshot(vm, backup)
+          end
+
+          def recreate_template(backup)
+            vm = @handle.vmdb(:Vm).find_by!(name: JSON.parse(backup.configuration)['vm_name'])
+            connection = establish_connection(vm)
+            create_template(connection, vm, backup)
+          end
+
+          def remove_snapshot(backup)
+            @handle.vmdb(:Snapshot).find_by(description: backup.snapshot_uuid).remove
+          end
+
+          def reset_backup(backup, template = nil)
+            backup.template = [template]
+            backup.error = false
+            backup.template = false
+            backup.status = 'ready'
+            backup.save!
           end
 
           def notify_admins
-            if @broken_backups.count > 0 || if @resumed_on_template_phase.count > 0 || if @resumed_on_snapshot_phase.count > 0
-                  @handle.instantiate('/Configuration/Email/Default')
-                  email_attributes = @handle.object('/Configuration/Email/Default').attributes
-                  from = email_attributes['from'].to_s
-                  to = email_attributes['default_recipient'].to_s
-                  subject = "[Compute] Backups WatchDog report #{DateTime.now.strftime('%FT%H:%M')}"
-                  message_body = "<p>The Backup Watchdog looked for stuck backups created in the time period of #{@start_time - @max_hours.hours} and #{@start_time - @max_hours.hours + 1.hour}</p>"
-                  message_body += "<p>Found stucked backups: #{@broken_backups.count + @resumed_on_snapshot_phase.count + @resumed_on_template_phase.count}</p>"
-                  if @resumed_on_snapshot_phase.count > 0
-                    message_body += "<p><b>Resumed on snapshot phase: #{@resumed_on_snapshot_phase.count}</b></p><br>"
-                    message_body += "<table border='1'>"
-                    message_body += '<tr><td><b>Backup name</b></td><td><b>Backup ID</b></td></tr>'
-                    @resumed_on_snapshot_phase.each do |backup|
-                      message_body += "<tr><td>#{backup.name}</td><td>#{backup.id}</td></tr>"
-                    end
-                    message_body += '</table><br>'
-                  end
+            return unless @broken_backups.count.positive? ||
+                          @resumed_on_template_phase.count.positive? ||
+                          @resumed_on_snapshot_phase.count.positive?
 
-                  if @resumed_on_template_phase.count > 0
-                    message_body += "<p><b>Resumed on template phase - #{@resumed_on_template_phase.count}</b></p>"
-                    message_body += "<table border='1'>"
-                    message_body += '<tr><td><b>Backup name</b></td><td><b>Backup ID</b></td></tr>'
-                    @resumed_on_template_phase.each do |backup|
-                      message_body += "<tr><td>#{backup.name}</td><td>#{backup.id}</td></tr>"
-                    end
-                    message_body += '</table><br>'
-                  end
+            @handle.instantiate('/Configuration/Email/Default')
 
-                  if @broken_backups.count > 0
-                    message_body += "<p><b>Broken backups - #{@broken_backups.count}</b></p>"
-                    message_body += "<table border='1'>"
-                    message_body += '<tr><td><b>Backup name</b></td><td><b>Backup ID</b></td></tr>'
-                    @broken_backups.each do |backup|
-                      message_body += "<tr><td>#{backup.name}</td><td>#{backup.id}</td></tr>"
-                    end
-                    message_body += '</table><br>'
-                  end
+            email_attributes = @handle.object('/Configuration/Email/Default').attributes
+            from = email_attributes['from'].to_s
+            to = email_attributes['default_recipient'].to_s
 
-                  message_body += "<p>How to fix broken backups: https://portal.#{ENV.fetch("CPV_DOMAIN", nil)}/services/compute/backups/troubleshoot/backup_problem.html</p>"
-                  message_body += email_attributes['signature']
-                  @handle.execute('send_email',
-                    to, from, subject, message_body)
-                end
+            subject = "[Compute] Backups WatchDog report #{DateTime.now.strftime('%FT%H:%M')}"
+            email_builder = EmailBuilder.new
+            
+            all_broken_backups = {
+              'Resumed on snapshot phase' => @resumed_on_snapshot_phase,
+              'Resumed on template phase' => @resumed_on_template_phase,
+              'Broken' => @broken_backups
+            }
+
+            all_backups_size = all_broken_backups.sum { |type, backups| backups.count }
+            email_builder.add_message_header(@start_time, @end_time, all_backups_size)
+
+            all_broken_backups.each do |type, backups|
+              backups_count = backups.count
+
+              if backups_count.positive?
+                email_builder.add_backups_count(type, backups_count)
+                email_builder.add_backups_table(backups)
               end
             end
+
+            email_builder.add_help_link
+            email_builder.add_signature(email_attributes['signature'])
+
+            @handle.execute('send_email', to, from, subject, email_builder.message_body)
+          end
+        end
+
+        class EmailBuilder
+          attr_reader :message_body
+
+          def initialize(handle = $evm)
+            @handle = handle
+            @message_body = ''
+          end
+
+          def add_message_header(start_time, end_time, backups_count)
+            @message_body += "<p>The Backup Watchdog looked for stuck backups created in the time period of " \
+                             "#{start_time.strftime('%FT%H:%M')} and #{end_time.strftime('%FT%H:%M')}</p>"
+            @message_body += "<p>Found stucked backups: #{backups_count}</p>"
+          end
+
+          def add_backups_count(backups_type, backups_size)
+            @message_body += "<p><b>#{backups_type} backups - #{backups_size}</b></p>"
+          end
+
+          def add_backups_table(backups)
+            @message_body += "<table border='1'>"
+            @message_body += '<tr><td><b>Backup name</b></td><td><b>Backup ID</b></td></tr>'
+            backups.each { |backup| @message_body += "<tr><td>#{backup.name}</td><td>#{backup.id}</td></tr>" }
+            @message_body += '</table><br>'
+          end
+
+          def add_signature(signature)
+            @message_body += signature
+          end
+
+          def add_help_link
+            help_url = "https://portal.#{ENV.fetch('CPV_DOMAIN')}/services/compute/backups/troubleshoot/backup_problem.html"
+            @message_body += "<p>How to fix broken backups: #{help_url}</p>"
           end
         end
       end
