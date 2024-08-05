@@ -76,7 +76,7 @@ module Platform
             template = @handle.vmdb(:VmOrTemplate).find_by(name: backup.name)
 
             if template.present?
-              return template_phase(backup, template)
+              return fix_template_phase(backup, template)
             elsif snapshot.present?
               recreate_template(backup)
             else
