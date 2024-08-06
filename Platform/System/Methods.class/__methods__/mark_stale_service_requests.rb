@@ -60,22 +60,25 @@ module Platform
           end
 
           def retire_stale_services(stale_retirement_requests)
-            service_retire_reload_count = 0
-
             stale_retirement_requests.each do |request|
-              service_id = request.options[:src_ids][0]
+              request.object_send(:update, message: 'Request timed out')
+              request.object_send(:update, request_state: 'finished') if ['active', 'pending'].include?(request.request_state)
+            end
+            create_new_requests(stale_retirement_requests)
+          end
+
+          def create_new_requests(stale_retirement_requests)
+            service_retire_reload_count = 0
+            service_ids = stale_retirement_requests.collect { |req| req.options[:src_ids] }.flatten.uniq
+            service_ids.each do |service_id|
               service = @handle.vmdb(:Service).find_by(id: service_id)
               next unless service
-              next if service.retirement_state != 'retiring' && service.retired
 
               service.retirement_state = nil
               service.vms.each { |vm| vm.retirement_state = nil }
               @handle.execute(:create_retire_request, service)
-
-              request.object_send(:update, message: 'Request timed out')
               service_retire_reload_count += 1
             end
-
             service_retire_reload_count
           end
         end
