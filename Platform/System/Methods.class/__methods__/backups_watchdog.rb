@@ -146,7 +146,7 @@ module Platform
 
             subject = "[Compute] Backups WatchDog report #{DateTime.now.strftime('%FT%H:%M')}"
             email_builder = EmailBuilder.new
-            
+
             all_broken_backups = {
               'Resumed on snapshot phase' => @resumed_on_snapshot_phase,
               'Resumed on template phase' => @resumed_on_template_phase,
