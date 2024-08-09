@@ -113,9 +113,12 @@ module Platform
           end
 
           def recreate_template(backup)
+            snapshot = @handle.vmdb(:Snapshot).find_by(uid_ems: backup.snapshot_uuid)
+            return recreate_snapshot(backup) unless snapshot
+
             vm = @handle.vmdb(:Vm).find_by!(name: JSON.parse(backup.configuration)['vm_name'])
             connection = establish_connection(vm)
-            create_template(connection, vm, backup)
+            create_template(connection, snapshot, backup)
           end
 
           def remove_snapshot(backup)
