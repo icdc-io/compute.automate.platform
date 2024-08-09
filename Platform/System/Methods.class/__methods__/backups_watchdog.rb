@@ -41,7 +41,7 @@ module Platform
           def stucked_backups(start_time, end_time)
             backups = @handle.vmdb(:GenericObject).where(
               generic_object_definition_id: Backup.id,
-              created_at: start_time..end_time
+              updated_at: start_time..end_time
             )
 
             backups.select do |backup|
