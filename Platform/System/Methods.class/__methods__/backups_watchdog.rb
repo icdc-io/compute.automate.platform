@@ -72,7 +72,7 @@ module Platform
               return
             end
 
-            snapshot = @handle.vmdb(:Snapshot).find_by(description: snapshot_uuid)
+            snapshot = @handle.vmdb(:Snapshot).find_by(uid_ems: snapshot_uuid)
             template = @handle.vmdb(:VmOrTemplate).find_by(name: backup.name)
 
             if template.present?
@@ -118,7 +118,7 @@ module Platform
           end
 
           def remove_snapshot(backup)
-            @handle.vmdb(:Snapshot).find_by(description: backup.snapshot_uuid).remove
+            @handle.vmdb(:Snapshot).find_by(uid_ems: backup.snapshot_uuid)&.remove
           end
 
           def reset_backup(backup, template = nil)
