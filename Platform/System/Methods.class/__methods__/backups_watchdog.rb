@@ -85,7 +85,7 @@ module Platform
 
             @resumed_on_snapshot_phase << backup
           rescue StandardError => e
-            @handle.log(:error, "[BackupsWatchdog] can't resume backup " \
+            @handle.log(:error, "[Backups Watchdog] can't resume backup " \
                                 "#{backup.name} (#{backup.id}) on snapshot phase (#{e.message})")
             @broken_backups << backup
           end
@@ -102,8 +102,9 @@ module Platform
 
             @resumed_on_template_phase << backup
           rescue StandardError => e
-            @handle.log(:error, "[BackupsWatchdog] can't resume backup " \
+            @handle.log(:error, "[Backups Watchdog] can't resume backup " \
                                 "#{backup.name}(#{backup.id}) on template phase (#{e.message})")
+            @broken_backups << backup
           end
 
           def recreate_snapshot(backup)
