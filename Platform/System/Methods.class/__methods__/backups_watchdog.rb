@@ -41,7 +41,7 @@ module Platform
           def stucked_backups(start_time, end_time)
             backups = @handle.vmdb(:GenericObject).where(
               generic_object_definition_id: Backup.id,
-              created_at: start_time..end_time
+              updated_at: start_time..end_time
             )
 
             backups.select do |backup|
@@ -72,7 +72,7 @@ module Platform
               return
             end
 
-            snapshot = @handle.vmdb(:Snapshot).find_by(description: snapshot_uuid)
+            snapshot = @handle.vmdb(:Snapshot).find_by(uid_ems: snapshot_uuid)
             template = @handle.vmdb(:VmOrTemplate).find_by(name: backup.name)
 
             if template.present?
@@ -85,7 +85,7 @@ module Platform
 
             @resumed_on_snapshot_phase << backup
           rescue StandardError => e
-            @handle.log(:error, "[BackupsWatchdog] can't resume backup " \
+            @handle.log(:error, "[Backups Watchdog] can't resume backup " \
                                 "#{backup.name} (#{backup.id}) on snapshot phase (#{e.message})")
             @broken_backups << backup
           end
@@ -102,8 +102,9 @@ module Platform
 
             @resumed_on_template_phase << backup
           rescue StandardError => e
-            @handle.log(:error, "[BackupsWatchdog] can't resume backup " \
+            @handle.log(:error, "[Backups Watchdog] can't resume backup " \
                                 "#{backup.name}(#{backup.id}) on template phase (#{e.message})")
+            @broken_backups << backup
           end
 
           def recreate_snapshot(backup)
@@ -112,13 +113,16 @@ module Platform
           end
 
           def recreate_template(backup)
+            snapshot = @handle.vmdb(:Snapshot).find_by(uid_ems: backup.snapshot_uuid)
+            return recreate_snapshot(backup) unless snapshot
+
             vm = @handle.vmdb(:Vm).find_by!(name: JSON.parse(backup.configuration)['vm_name'])
             connection = establish_connection(vm)
-            create_template(connection, vm, backup)
+            create_template(connection, snapshot, backup)
           end
 
           def remove_snapshot(backup)
-            @handle.vmdb(:Snapshot).find_by(description: backup.snapshot_uuid).remove
+            @handle.vmdb(:Snapshot).find_by(uid_ems: backup.snapshot_uuid)&.remove
           end
 
           def reset_backup(backup, template = nil)
@@ -142,7 +146,7 @@ module Platform
 
             subject = "[Compute] Backups WatchDog report #{DateTime.now.strftime('%FT%H:%M')}"
             email_builder = EmailBuilder.new
-            
+
             all_broken_backups = {
               'Resumed on snapshot phase' => @resumed_on_snapshot_phase,
               'Resumed on template phase' => @resumed_on_template_phase,
