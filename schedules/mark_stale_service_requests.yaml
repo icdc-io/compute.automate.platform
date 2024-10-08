@@ -34,7 +34,7 @@
       :interval:
         :unit: hourly
         :value: '1'
-    enabled: false
+    enabled: true
     userid: admin
     prod_default: 
     miq_search_id: 
