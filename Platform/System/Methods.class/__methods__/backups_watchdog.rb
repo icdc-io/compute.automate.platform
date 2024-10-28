@@ -128,7 +128,6 @@ module Platform
           def reset_backup(backup, template = nil)
             backup.template = [template]
             backup.error = false
-            backup.template = false
             backup.status = 'ready'
             backup.save!
           end
