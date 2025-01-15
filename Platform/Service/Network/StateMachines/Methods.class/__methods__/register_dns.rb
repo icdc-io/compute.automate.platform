@@ -2,10 +2,7 @@
 # Description: <Method description here>
 #
 
-require 'bundler'
-Bundler.setup(:default)
 require 'resolv'
-require 'coredns'
 
 module Platform
   module Automate
