@@ -95,7 +95,7 @@ module Platform
 
             if template.present?
               remove_snapshot(backup)
-              reset_backup(backup, template)
+              reset_backup(backup)
             else
               recreate_template(backup)
             end
@@ -125,8 +125,7 @@ module Platform
             @handle.vmdb(:Snapshot).find_by(uid_ems: backup.snapshot_uuid)&.remove
           end
 
-          def reset_backup(backup, template = nil)
-            backup.template = [template]
+          def reset_backup(backup)
             backup.error = false
             backup.status = 'ready'
             backup.save!
