@@ -4,11 +4,12 @@ custom_button_set:
     name: Platform|Vm|
     description: Platform
     set_type: CustomButtonSet
-    guid: 3e089526-8a6f-4f41-a219-b11cb7067a48
+    guid: 5926cd79-26ea-4099-9617-3e86a5d8cd2d
     read_only: 
     set_data:
       :button_order:
-      - 26000000000135
+      - 21000000000029
+      - 21000000000035
       :button_icon: ff ff-hexagon
       :display: true
       :applies_to_class: Vm
@@ -21,7 +22,7 @@ custom_button_set:
   children:
     custom_button:
     - attributes:
-        guid: 5b995e17-dd8b-4759-9399-110760cbf4ed
+        guid: a20edc51-2aee-4893-9327-61b6e5545ebf
         description: Reset password
         applies_to_class: Vm
         visibility_expression: 
@@ -58,3 +59,38 @@ custom_button_set:
             configuration_template_id: 
             configuration_template_type: 
             dialog_name: Password reset
+    - attributes:
+        guid: 716e04c3-2531-4247-be6c-62d1aa021878
+        description: vm_reconfigute
+        applies_to_class: Vm
+        visibility_expression: 
+        options:
+          :button_icon: pficon pficon-cpu
+          :button_type: default
+          :display: true
+          :open_url: false
+          :display_for: single
+          :submit_how: one
+        userid: admin
+        wait_for_complete: 
+        name: VM Resources
+        visibility:
+          :roles:
+          - _ALL_
+        applies_to_id: 
+        enablement_expression: 
+        disabled_text: 
+      associations:
+        resource_action:
+        - attributes:
+            action: 
+            resource_type: CustomButton
+            ae_namespace: SYSTEM
+            ae_class: PROCESS
+            ae_instance: Request
+            ae_message: create
+            ae_attributes:
+              request: Call_Instance
+            configuration_template_id: 
+            configuration_template_type: 
+            dialog_name: vm_reconfigure
