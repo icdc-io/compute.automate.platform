@@ -40,8 +40,8 @@ module Platform
             vm_service = connection.system_service.vms_service.vm_service(vm.uid_ems)
             nics_service = vm_service.nics_service
 
-            datacenter = vm.parent_datacenter
-            nic_id, nic_profile_id, new_nic_id = collect_nic_info(connection, nics_service, new_vlan, datacenter)
+            cluster = vm.ems_cluster
+            nic_id, nic_profile_id, new_nic_id = collect_nic_info(connection, nics_service, new_vlan, cluster)
 
             @handle.log(:info, "nic_id: #{nic_id}, nic_profile_id: #{nic_profile_id}, new_nic_id: #{new_nic_id}")
 
@@ -56,11 +56,11 @@ module Platform
             raise NotImplementedError
           end
 
-          def collect_nic_info(connection, nics_service, new_vlan, datacenter)
+          def collect_nic_info(connection, nics_service, new_vlan, cluster)
             nic_id = nics_service.list.first.id
             nic_profile_id = nics_service.list.first.vnic_profile.id
 
-            network_id = connection.system_service.data_centers_service.data_center_service(datacenter.uid_ems).networks_service.list(search: "name=#{new_vlan}", max: 1).first.id
+            network_id = connection.system_service.clusters_service.cluster_service(cluster.uid_ems).networks_service.list.find { |nw| nw.name == new_vlan }.id
             new_nic_id = connection.system_service.networks_service.network_service(network_id).vnic_profiles_service.list(max: 1).first.id
 
             [nic_id, nic_profile_id, new_nic_id]
