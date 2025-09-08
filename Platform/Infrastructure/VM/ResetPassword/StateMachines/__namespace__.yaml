@@ -8,5 +8,5 @@ object:
     display_name: 
     priority: 
     enabled: 
-    ancestry: 26000000000290/26000000000649/26000000000650/26000000000651
+    ancestry: 21000000000087/21000000000484/21000000000485/21000000000486
     relative_path: Infrastructure/VM/ResetPassword/StateMachines
