@@ -38,7 +38,11 @@ module Platform
               nic_id = nic.id
 
               new_vlan = @handle.root['dialog_network_profile']
-              new_nic_id = connection.system_service.vnic_profiles_service.list.find { |x| x.name == new_vlan }.id
+              cluster = vm.ems_cluster
+              network_id = connection.system_service.clusters_service.cluster_service(cluster.uid_ems).networks_service.list.find { |nw| nw.name == new_vlan }.id
+              new_nic_id = connection.system_service.networks_service.network_service(network_id).vnic_profiles_service.list(max: 1).first.id
+
+              @handle.log(:info, "nic_id: #{nic_id}, nic_profile_id: #{nic.vnic_profile.id}, new_nic_id: #{new_nic_id}")
 
               if nic.vnic_profile.id == new_nic_id || nic_id == new_nic_id
               	@handle.log(:info, "New network type is the same as original one. Aborting...")
