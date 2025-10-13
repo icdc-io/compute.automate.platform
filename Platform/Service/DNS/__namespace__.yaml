@@ -8,5 +8,5 @@ object:
     display_name: 
     priority: 
     enabled: 
-    ancestry: 26000000000290/26000000000582
+    ancestry: 21000000000087/21000000000488
     relative_path: Service/DNS

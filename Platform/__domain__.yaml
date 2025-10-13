@@ -6,9 +6,9 @@ object:
     name: Platform
     description: Cloud Platform-wide configuration and generic services
     display_name: 
-    priority: 7
+    priority: 3
     enabled: true
-    tenant_id: 26000000000001
+    tenant_id: 21000000000001
     source: user
     top_level_namespace: 
     ancestry: 
