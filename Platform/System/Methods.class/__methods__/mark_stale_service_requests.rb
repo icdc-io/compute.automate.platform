@@ -37,7 +37,7 @@ module Platform
             return if stale_provision_requests.empty?
 
             stale_provision_requests.each do |request|
-              request.object_send(:update, status: 'Error', message: 'Request timed out')
+              request.object_send(:update, status: 'Error', request_state: 'finished', message: 'Request timed out')
             end
           end
 
@@ -62,7 +62,7 @@ module Platform
           def retire_stale_services(stale_retirement_requests)
             stale_retirement_requests.each do |request|
               request.object_send(:update, message: 'Request timed out')
-              request.object_send(:update, request_state: 'finished') if ['active', 'pending'].include?(request.request_state)
+              request.object_send(:update, request_state: 'finished') if %w[active queued pending].include?(request.request_state)
             end
             create_new_requests(stale_retirement_requests)
           end
