@@ -1,53 +1,157 @@
-# Platform
+# 🤖 Platform — ManageIQ Automate Domain
 
-Shared automation not included in other automation packages.
+The **Platform** repository contains a ManageIQ **Automate domain** that is maintained as code (methods, dialogs, buttons, tags, reports, schedules) and can be synchronized with a ManageIQ environment using `rake` tasks.
 
-## Import code from repository to DEV environment
+---
+
+## 🚀 Overview
+
+### 📦 What's included
+- 🧩 **Automate code** — `Platform/`
+- 🗂️ **Service dialogs** — `service_dialogs/`
+- 🧷 **Custom buttons** — `custom_buttons/`
+- 🧱 **Generic objects** — `generic_object_definitions/`
+- 🏷️ **Tags** — `tags/`
+- 📊 **Reports** — `reports/`
+- 🕒 **Schedules** — `schedules/`
+
+---
+
+## ✅ Requirements
+
+- A running **ManageIQ** environment.
+- Access to the ManageIQ Rails app directory (typically `vmdb`) with `rake` available.
+- Repository content present on the target system (copied or mounted).
+- The filesystem paths in commands below are **examples** and may differ in your environment.
+
+---
+
+## ⚙️ Import to environment
+
+Import the **Automate domain** from this repository into ManageIQ:
 
 ```bash
 cd /var/www/miq/vmdb
 rake evm:automate:import DOMAIN=Platform IMPORT_DIR=/opt/manageiq/automation/platform OVERWRITE=true ENABLED=true
 ```
 
-After import fresh automation code you must import service dialogs and customization buttons.
+> This command imports only the Automate domain (`Platform/`). Import related artifacts as needed:
 
-
-## Export code from DEV environment info repository
+### 🗂️ Service dialogs
 
 ```bash
-# Remove old template provisioning, as export leaves old files for renamed instances and methods in repository.
+cd /var/www/miq/vmdb
+rake evm:import:service_dialogs -- --source=/opt/manageiq/automation/platform/service_dialogs
+```
+
+### 🧷 Custom buttons
+
+```bash
+cd /var/www/miq/vmdb
+rake evm:import:custom_buttons -- --source=/opt/manageiq/automation/platform/custom_buttons
+```
+
+### 🧱 Generic object definitions
+
+```bash
+cd /var/www/miq/vmdb
+rake evm:import:generic_object_definitions -- --source=/opt/manageiq/automation/platform/generic_object_definitions
+```
+
+### 📊 Reports
+
+```bash
+cd /var/www/miq/vmdb
+rake evm:import:reports -- --source=/opt/manageiq/automation/platform/reports
+```
+
+### 🕒 Schedules
+
+```bash
+cd /var/www/miq/vmdb
+rake evm:import:schedules -- --source=/opt/manageiq/automation/platform/schedules
+```
+
+### 🏷️ Tags
+
+```bash
+cd /var/www/miq/vmdb
+rake evm:import:tags -- --source=/opt/manageiq/automation/platform/tags
+```
+
+---
+
+## 📤 Export from environment back to repository
+
+Export the **Automate domain** from ManageIQ back into this repository:
+
+```bash
+# Export may leave old files for renamed instances/methods — clean the domain folder first.
 cd /opt/manageiq/automation/platform
 rm -rf Platform
-# Import new
+
 cd /var/www/miq/vmdb
 rake evm:automate:export DOMAIN=Platform EXPORT_DIR=/opt/manageiq/automation/platform
 ```
 
-Export service dialogs:
- - as it exports all dialogs then remove not related dialogs and commit carefully only those which ready for production
+> The sections below show how to export related artifacts into this repository. Review and commit changes carefully.
+
+### 🗂️ Service dialogs
 
 ```bash
 rake evm:export:service_dialogs -- --directory=/opt/manageiq/automation/platform/service_dialogs
 ```
 
-Export customization templates:
+> Note: this task may export dialogs not related to this domain. Review changes and commit only what is intended.
+
+### 🧷 Custom buttons
 
 ```bash
-vmdb
-rake evm:export:customization_templates -- --directory=/opt/manageiq/automation/platform/customization_templates
+cd /var/www/miq/vmdb
+rake evm:export:custom_buttons -- --directory=/opt/manageiq/automation/platform/custom_buttons
 ```
 
-### Tags
+### 🧱 Generic object definitions
 
 ```bash
-vmdb
+cd /var/www/miq/vmdb
+rake evm:export:generic_object_definitions -- --directory=/opt/manageiq/automation/platform/generic_object_definitions
+```
+
+> Note: this task exports **all** generic object definitions from the environment. Commit only what belongs in this repository.
+
+### 📊 Reports
+
+```bash
+cd /var/www/miq/vmdb
+rake evm:export:reports -- --directory=/opt/manageiq/automation/platform/reports
+```
+
+### 🕒 Schedules
+
+```bash
+cd /var/www/miq/vmdb
+rake evm:export:schedules -- --directory=/opt/manageiq/automation/platform/schedules
+```
+
+### 🏷️ Tags
+
+```bash
+cd /var/www/miq/vmdb
 rake evm:export:tags -- --directory=/opt/manageiq/automation/platform/tags
 ```
 
-As it exports all definitions:
+#### ⚠️ Important note
 
-1. DO NOT USE `git add .`
-2. add and commit only required definitions
-3. remove not related files: `rm -rf tags/*`
-4. git restore required files: `git restore tags`
+The tags export includes **all** definitions. Recommended workflow:
 
+1. Do not run `git add .`
+2. Add/commit only required definitions
+3. If needed, delete unrelated exports: `rm -rf tags/*`
+4. Restore required files: `git restore tags`
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License. See [`LICENSE`](./LICENSE).
