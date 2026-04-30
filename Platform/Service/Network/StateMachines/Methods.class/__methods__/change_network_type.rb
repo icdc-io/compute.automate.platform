@@ -22,7 +22,7 @@ module Platform
               @handle.log(:info, "Changing network type for vm #{vm.name} (#{vm.id})")
 
               case vm.vendor
-              when 'redhat'
+              when 'redhat', 'ovirt'
                 change_network_type_redhat(vm)
               when 'power_systems'
                 change_network_type_power(vm)
