@@ -27,7 +27,7 @@ module Platform
               "approval_state = 'approved' " \
                 "AND type IN ('MiqProvisionRequest', 'ServiceTemplateProvisionRequest') " \
                 "AND request_state IN ('active', 'queued', 'pending') " \
-                "AND status = 'Ok' AND process = TRUE " \
+                "AND ((status = 'Ok' AND process = TRUE) OR (status = 'Error' AND request_state = 'active')) " \
                 "AND (source_type IS NULL OR (source_type = 'VmOrTemplate' AND source_id IN (SELECT id FROM vms)) " \
                 "OR (source_type = 'ServiceTemplate' AND source_id IN (SELECT id FROM service_templates))) " \
                 "AND ((created_on + interval '1 hour') < NOW())"
@@ -37,7 +37,11 @@ module Platform
             return if stale_provision_requests.empty?
 
             stale_provision_requests.each do |request|
-              request.object_send(:update, status: 'Error', message: 'Request timed out')
+              tasks = request.miq_request_tasks
+              if tasks.pluck(:state).uniq.count != 1
+                tasks.each { |task| task.object_send(:update_and_notify_parent, :state => 'finished') }
+              end
+              request.object_send(:update, status: 'Error', request_state: 'finished', message: 'Request timed out')
             end
           end
 
@@ -62,7 +66,7 @@ module Platform
           def retire_stale_services(stale_retirement_requests)
             stale_retirement_requests.each do |request|
               request.object_send(:update, message: 'Request timed out')
-              request.object_send(:update, request_state: 'finished') if ['active', 'pending'].include?(request.request_state)
+              request.object_send(:update, request_state: 'finished') if %w[active queued pending].include?(request.request_state)
             end
             create_new_requests(stale_retirement_requests)
           end
