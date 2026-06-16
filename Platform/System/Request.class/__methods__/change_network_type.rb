@@ -1,5 +1,4 @@
 require '/var/www/miq/vmdb/lib/icdc/network'
-require 'ovirtsdk4'
 
 module Platform
   module Automate

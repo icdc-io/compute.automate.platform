@@ -2,8 +2,6 @@
 # Description: <Method description here>
 #
 
-require 'resolv'
-
 module Platform
   module Automate
     module System
