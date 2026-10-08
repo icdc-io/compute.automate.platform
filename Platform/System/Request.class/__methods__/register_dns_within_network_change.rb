@@ -1,6 +1,3 @@
-require 'resolv'
-require 'coredns'
-
 module Platform
   module Automate
     module System
