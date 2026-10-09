@@ -1,3 +1,4 @@
+# TODO: remove this functionality, we going to get rid of this in Compute Global UI
 module Platform
   module Automate
     module Service
@@ -13,6 +14,7 @@ module Platform
             @cpv_domain = @handle.object('/Configuration/Location/Default').attributes['cpv_domain']
             @owner_name = @handle.vmdb(:User).find_by(:id => @handle.root['ownerId'])['name']
             @service = @handle.vmdb(:Service).find_by(:id => @handle.root['serviceId'].to_i)
+            @location = @service.region_description.downcase
           end
 
           def send_emails
@@ -37,17 +39,16 @@ module Platform
           end
           
           def main_links
-            @link_service = "https://compute.#{@service.region_description.downcase}.#{@cpv_domain}/ui/service/services/#{@service.id}"
-            link_help = "https://help.#{@cpv_domain}"
-            @link_help_share = "#{link_help}/compute/en/Services/Sharing_Service.html"
+            @link_service = "https://compute.#{@location}.#{@cpv_domain}/ui/service/services/#{@service.id}"
+            @link_docs = "https://docs.#{@cpv_domain}/en/compute/dedicated_ui/services/sharing_service/"
           end
           
           def email_params
             users_emails
             @subject = "[Compute] Common access - #{@service['name']}"
             @body = "<h3>Hello!</h3>"
-            @body += "User #{@owner_name} has given you access to the service:: <a href='#{@link_service}'>#{@service['name']}</a>"
-            @body += "<br><br><a href='#{@link_help_share}'>More info</a> on sharing the service.<br><br>"
+            @body += "User #{@owner_name} has given you access to the service: <a href='#{@link_service}'>#{@service['name']}</a>"
+            @body += "<br><br><a href='#{@link_docs}'>More info</a> on sharing the service.<br><br>"
             @body += @footer
           end
         end
