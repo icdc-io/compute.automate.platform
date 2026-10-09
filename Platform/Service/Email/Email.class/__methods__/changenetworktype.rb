@@ -32,8 +32,8 @@ module Platform
           def main_links
             @link_service = "https://compute.#{@location}.#{@cpv_domain}/ui/service/services/#{@service.id}"
             @link_vm = "#{@link_service}/resource=#{@vm.id}"
-            link_help = "https://help.#{@cpv_domain}"
-            @link_help_share = "#{link_help}/compute/en/Services/Networks/Network_change.html"
+            docs_url = "https://docs.#{@cpv_domain}"
+            @link_docs_change = "#{docs_url}/en/compute/dedicated_ui/services/networks/network_change/"
           end
           
           def email_params
@@ -44,7 +44,7 @@ module Platform
             @body = "<h3>Hello, #{owner.name}!</h3>"
             @body += "Your network type was changed for VM - <a href='#{@link_vm}'>#{@vm.name}</a> in service - <a href='#{@link_service}'>#{@service.name}</a>"
             @body += "<br>New network is #{@network_name}"
-            @body += "<br><br><a href='#{@link_help_share}'>More info</a> on changing the network type.<br><br>"
+            @body += "<br><br><a href='#{@link_docs_change}'>More info</a> on changing the network type.<br><br>"
             @body += @email_attributes['signature']
           end
         end

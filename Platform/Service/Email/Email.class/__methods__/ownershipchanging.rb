@@ -25,8 +25,10 @@ module Platform
           private
 
           def main_links
-            @service_url = "compute.#{@location}.#{@cpv_domain}/ui/service/services/#{@service.id}"
-            @help_link = "https://help.#{@cpv_domain}/compute/en/Services/Configuration/Change_Service_Ownership.html"
+            @link_service = "https://compute.#{@location}.#{@cpv_domain}/ui/service/services/#{@service.id}"
+            docs_url="https://docs.#{@cpv_domain}"
+            @link_docs_owner = "#{docs_url}/en/compute/dedicated_ui/services/configuration/change_service_ownership/"
+            @link_docs_access = "#{docs_url}/en/compute/dedicated_ui/services/vm/service_access/"
           end
 
           def email_params
@@ -72,20 +74,20 @@ module Platform
                     else
                       '<tr>'\
                           '<td>HTML5-console</td>'\
-                          "<td><a href='https://#{@service_url}'>#{@service_url}</a></td>"\
+                          "<td><a href='#{@link_service}'>Open details page</a></td>"\
                           '<td></td>'\
                           '<td></td>'\
                       '</tr>'\
                       '<tr>'\
                           '<td>Other access types</td>'\
-                          "<td><a href='https://help.#{@cpv_domain}/compute/en/Services/VM/Service_Access.html'>read more</a></td>"\
+                          "<td><a href='#{@link_docs_access}'>Read more</a></td>"\
                           '<td></td>'\
                           '<td></td>'\
                       '</tr>'
                     end
 
             body += '</table>'
-            body += "<br><br><a href='#{@help_link}'>More info</a><br><br>"
+            body += "<br><br><a href='#{@link_docs_owner}'>More info</a><br><br>"
             body += @footer
             body
           end
