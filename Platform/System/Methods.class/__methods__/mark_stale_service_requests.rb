@@ -13,6 +13,7 @@ module Platform
 
           def main
             @handle.log(:info, 'Start mark stale service requests')
+            mark_stale_provision_tasks
             mark_stale_provision_requests
             mark_stale_retirement_requests
             @handle.log(:info, 'End mark stale service requests')
@@ -42,6 +43,27 @@ module Platform
                 tasks.each { |task| task.object_send(:update_and_notify_parent, :state => 'finished') }
               end
               request.object_send(:update, status: 'Error', request_state: 'finished', message: 'Request timed out')
+            end
+          end
+
+          def mark_stale_provision_tasks
+            # MiqProvisionTask is the lowest level provision (VM provision)
+            # it can stale in `provisioned` state so parent ServiceTemplateProvisionTask never finished and requeue
+            @handle.log(:info, 'Schedule - collecting stale MiqProvisionTask')
+            stale_provision_tasks = @handle.vmdb(:MiqProvisionTask).where(
+              "state IN ('provisioned')" \
+              " AND ((created_on + interval '1 hour') < NOW())" 
+            )
+            @handle.log(:info, "Schedule - founded #{stale_provision_tasks.size} stale MiqProvisionTask records")
+            return if stale_provision_tasks.empty?
+            
+            stale_provision_tasks.each do |task|
+              if task.state == 'provisioned'
+                # Provisioned means VM exists already, so set MiqProvisionTask as finished, so this allow
+                # parent ServiceTemplateProvisionTask to fisnish it's state as well
+                @handle.log(:info, "Schedule - update MiqProvisionTask [#{task.id}] state [#{task.state}] => finished")
+                task.object_send(:update_and_notify_parent, :state => 'finished', :message => "#{task.message} (stale, forced finished)")
+              end
             end
           end
 
