@@ -1,5 +1,3 @@
-require 'nokogiri'
-
 path = $evm.root['dialog_path']
 params = $evm.root['dialog_params']
 # FIX ASAP ICDC-G

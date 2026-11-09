@@ -2,8 +2,6 @@
 # Description: dns class # TODO
 #
 
-require 'coredns'
-
 def clone_all_dns_records(service, old_vm, new_vm)
   ip = ips(new_vm).first
   raise "Ip address can't be blank" if ip.blank?

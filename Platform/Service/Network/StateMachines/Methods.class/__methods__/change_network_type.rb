@@ -1,5 +1,3 @@
-require 'ovirtsdk4'
-
 module Platform
   module Automate
     module System
